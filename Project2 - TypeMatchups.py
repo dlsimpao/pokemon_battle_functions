@@ -1,51 +1,227 @@
 #P-Type Counters - generates type matchups
 
-#def main():
-    #ans1 - answer for dual type
-    
+#improvements - better variable names to distinguish local and global variables
+#dual types
 
+def main():
+    type_list = ["normal","fighting","flying","poison","ground","rock","bug","ghost","steel",\
+                 "fire","water","grass","electric","psychic","ice","dragon","dark","fairy"]
     
+    #Asks user for types and stores in choice list
+    choice_list = askForTypes(type_list)
 
-def effectivityOf(type1,type2 = None):
-    type_list = ["normal","fighting","flying","poison","ground","rock","bug","ghost","steel"\
-                 "fire","water","grass","electric","psychic","ice","dragon","dark","fairy","none",None]
-    dualType = False
+    #formats choice list into 
+    choice_list = [type1.lower() for type1 in choice_list]
+
+    #checks if user wants 
+    ans2 = choiceCheck1(choice_list)
+    while ans2 == "yes":
+        main()
+
+    printEffectReport(choice_list)
+
+
+#choice check1
+def choiceCheck1(choice_list):
+    ans2 = input("You have chosen: "+str(choice_list)+"\nDo you want to change your choice? Yes | No?\n")
+    while not validAnswer(ans2):
+        ans2 = input("Do you want to make any changes? Yes | No?\n")
+        ans2 = ans2.lower()
+    return ans2
+
+#for yes and no questions
+def validAnswer(ans):
+    valid = False
+    ans = ans.lower()
+    if ans == "yes" or "no":
+        valid = True
+    return valid
+
+#identifies valids from user input; returns a list of valid types
+def askForTypes(type_list):
+    ans1 = input("Please enter up to two different valid types.\n")
+    validInputs = []
+    while ans1 != '' and (len(validInputs) < 3) :
+        if isValidType(ans1,type_list) and ans1 not in validInputs:
+            validInputs.append(ans1)
+        ans1 = input()
+    return validInputs
     
+    
+#checks if valid type
+#improve to include valid dual types
+def isValidType(type1,typeList):
+    valid = False
     try:
-        if type1 or type2 in type_list:
-            type1.lower()
-            if type2 != None:
-                type2.lower()
-                dualType = True
-                
-        
+        type1 = type1.lower()
+        if type1 in typeList:
+            valid = True      
     except:
-        print("Please enter valid types from this list:\n")
-        for i in range(len(type_list)-2):
-            print(type_list[i]) #we can use end = "" to remove newline character
+        raise ValueError
+    else:
+        if type1 not in typeList:
+            print("Please enter valid types from this list:\n")
+            for i in range(len(typeList)):
+                print(typeList[i])
+            main()
+        else:
+            pass
+    return valid
 
-    #dictionaries of type effectiveness
-    norm_effect = {"rock":0.5, "ghost":0, "steel":0.5}
-    fight_effect = {"normal":2, "flying":0.5, "poison":0.5,"rock":2,"bug":0.5,"ghost":0,"steel":2,"psychic":0.5,"ice":2,"dark":2,"fairy":0.5}
-    fly_effect = {"fighting":2, "rock":0.5, "bug":2,"steel":0.5, "grass":2, "electric":0.5}
-    pois_effect = {"poison":2,"ground":0.5, "rock":0.5, "ghost":0.5,"steel":0,"grass":2,"fairy":2}
-    ground_effect = {"flying":0, "poison":2,"rock":2,"bug":0.5,"steel":2,"fire":2,"grass":0.5,"electric":2}
-    rock_effect = {"fighting":0.5,"flying":2,"ground":0.5,"bug":2,"steel":2,"fire":2,"ice":2}
-    bug_effect = {"fighting":0.5,"flying":0.5,"poison":0.5,"ghost":0.5,"steel":0.5,"fire":0.5,"grass":2,"psychic":2,"dark":2,"fairy":0.5}
-    ghost_effect = {"normal":0,"ghost":2,"psychic":2,"dark":0.5}
-    steel_effect = {"rock":2,"steel":0.5,"fire":0.5,"water":0.5,"electric":0.5,"ice":2,"fairy":2}
-    fire_effect = {"rock":0.5,"bug":2,"steel":2,"fire":0.5,"water":0.5,"grass":2,"ice":2,"dragon":0.5}
-    water_effect = {"ground":2,"rock":2,"fire":2,"water":0.5,"grass":0.5,"dragon":0.5}
-    grass_effect = {"flying":0.5,"poison":0.5,"ground":2,"rock":2,"bug":0.5,"steel":0.5,"fire":0.5,"water":2,"grass":0.5,"dragon":0.5}
-    elec_effect = {"flying":2,"ground":0,"water":2,"grass":0.5,"electric":0.5,"dragon":0.5}
-    psych_effect = {"fighting":2,"poison":2,"steel":2,"psychic":0.5,"dark":0}
-    ice_effect = {"flying":2,"ground":2,"steel":0.5,"fire":0.5,"water":0.5,"grass":2,"ice":0.5,"dragon":2}
-    drgn_effect = {"steel":0.5,"dragon":2,"fairy":0}
-    dark_effect = {"fighting":0.5,"ghost":2,"psychic":2,"dark":0.5,"fairy":0.5}
-    fairy_effect = {"fighting":2,"poison":2,"steel":0.5,"fire":0.5,"dragon":2,"dark":2}
+#--------------------------------------------------------------create an isValidDualType
+
+## type_list = ["normal","fighting","flying","poison","ground","rock","bug","ghost","steel"\
+##                 "fire","water","grass","electric","psychic","ice","dragon","dark","fairy","none",None]
+
+##if type1 in type_list and typ2 in type_list:
+##            type1.lower()
+##            if type2 != None:
+##                type2.lower()
+##            valid = True
+
+
+def printMoveTypeReport(type_num,types_dict):
+
+    noEffectAgainst = []
+    notVeryEffectiveAgainst = []
+    effectiveAgainst = []
+    
+    for key in types_dict[type_num]:
+        if types_dict[type_num][key] == 0:
+            noEffectAgainst.append(key)
+        elif types_dict[type_num][key] == 0.5:
+            notVeryEffectiveAgainst.append(key)
+        elif types_dict[type_num][key] == 2:
+            effectiveAgainst.append(key)
+    print("------------------------------------------------------------------------------------------------------\n"\
+          "----------------------------------------Move Type Report----------------------------------------------")
+    print(type_num+"-type moves\n\n"+\
+          "-have no effect against:"+str(noEffectAgainst)+"\n"+\
+          "-are not very effective against:"+str(notVeryEffectiveAgainst)+"\n"+\
+          "-are super effective against:"+str(effectiveAgainst))
+
+def printMatchupReport(choice_list,types_dict):
+    #for dual types
+    superResistantAgainst = []
+    superWeakAgainst = []
+
+    
+    #type matchup
+    weakAgainst = []
+    resistantAgainst = []
+    immuneAgainst = []
+    print(len(choice_list))
+    if len(choice_list) == 1:
+        type1 = choice_list[0]
+        for key in types_dict:
+            try:
+                if types_dict[key][type1] == 0:
+                    immuneAgainst.append(key)
+                elif types_dict[key][type1] == 0.5:
+                    resistantAgainst.append(key)
+                elif types_dict[key][type1] == 2:
+                    weakAgainst.append(key)
+            except:
+                pass
+        print("------------------------------------------------------------------------------------------------------\n"\
+              "----------------------------------------Matchup Report----------------------------------------------")
+        print(type1+"-types\n\n"+\
+              "-are immune against"+str(immuneAgainst)+"\n"+\
+              "-are resistant against:"+str(resistantAgainst)+"\n"+\
+              "-are weak against:"+str(weakAgainst))
+    else:
+        type1, type2 = choice_list[0],choice_list[1]
+        for key in types_dict:
+            try:
+                if types_dict[key][type1]*types_dict[key][type2] == 0:
+                    immuneAgainst.append(key)
+                elif types_dict[key][type1]*types_dict[key][type2] == 0.25:
+                    superResistantAgainst.append(key)
+                elif types_dict[key][type1]*types_dict[key][type2] == 0.5:
+                    resistnatAgainst.append(key)
+                elif types_dict[key][type1]*types_dict[key][type2] == 2:
+                    weakAgainst.append(key)
+                elif types_dict[key][type1]*types_dict[key][type2] == 4:
+                    superWeakAgainst.append(key)
+            except:
+                continue
+        print("------------------------------------------------------------------------------------------------------\n"\
+              "----------------------------------------Matchup Report----------------------------------------------")
+        print(type1+"-"+type2+" types\n\n"+\
+              "-are immune against"+str(immuneAgainst)+"\n"+\
+              "-are super resistant against"+str(superResistantAgainst)+"\n"+\
+              "-are resistant against:"+str(resistantAgainst)+"\n"+\
+              "-are weak against:"+str(weakAgainst)+"\n"+\
+              "-are super weak against:"+str(weakAgainst))
+                    
+        
+
+
+
+#gets chosen types and prints report
+def printEffectReport(choice_list): 
+
+    #dictionary of all type effects
+    types_dict = {"normal":{"rock":0.5, "ghost":0, "steel":0.5},\
+                        "fighting":{"normal":2, "flying":0.5, "poison":0.5,"rock":2,"bug":0.5,"ghost":0,"steel":2,"psychic":0.5,"ice":2,"dark":2,"fairy":0.5},\
+                        "flying":{"fighting":2, "rock":0.5, "bug":2,"steel":0.5, "grass":2, "electric":0.5},\
+                        "poison":{"poison":0.5,"ground":0.5, "rock":0.5, "ghost":0.5,"steel":0,"grass":2,"fairy":0.5},\
+                        "ground":{"flying":0, "poison":2,"rock":2,"bug":0.5,"steel":2,"fire":2,"grass":0.5,"electric":2},\
+                        "rock":{"fighting":0.5,"flying":2,"ground":0.5,"bug":2,"steel":0.5,"fire":2,"ice":2},\
+                        "bug":{"fighting":0.5,"flying":0.5,"poison":0.5,"ghost":0.5,"steel":0.5,"fire":0.5,"grass":2,"psychic":2,"dark":2,"fairy":0.5},\
+                        "ghost":{"normal":0,"ghost":2,"psychic":2,"dark":0.5},\
+                        "steel":{"rock":2,"steel":0.5,"fire":0.5,"water":0.5,"electric":0.5,"ice":2,"fairy":2},\
+                        "fire":{"rock":0.5,"bug":2,"steel":2,"fire":0.5,"water":0.5,"grass":2,"ice":2,"dragon":0.5},\
+                        "water":{"ground":2,"rock":2,"fire":2,"water":0.5,"grass":0.5,"dragon":0.5},\
+                        "grass":{"flying":0.5,"poison":0.5,"ground":2,"rock":2,"bug":0.5,"steel":0.5,"fire":0.5,"water":2,"grass":0.5,"dragon":0.5},\
+                        "electric":{"flying":2,"ground":0,"water":2,"grass":0.5,"electric":0.5,"dragon":0.5},\
+                        "psychic":{"fighting":2,"poison":2,"steel":0.5,"psychic":0.5,"dark":0},\
+                        "ice":{"flying":2,"ground":2,"steel":0.5,"fire":0.5,"water":0.5,"grass":2,"ice":0.5,"dragon":2},\
+                        "dragon":{"steel":0.5,"dragon":2,"fairy":0},\
+                        "dark":{"fighting":0.5,"ghost":2,"psychic":2,"dark":0.5,"fairy":0.5},\
+                        "fairy":{"fighting":2,"poison":2,"steel":0.5,"fire":0.5,"dragon":2,"dark":2}}
 
     
 
+
+    if len(choice_list) == 2:
+        type1, type2 = choice_list[0],choice_list[1]
+        printMoveTypeReport(type1,types_dict)
+        printMoveTypeReport(type2,types_dict)
+
+        printMatchupReport(choice_list,types_dict)
+    else:
+        type1 = choice_list[0]
+        printMoveTypeReport(type1,types_dict)
+        printMatchupReport(choice_list,types_dict)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+    
+main()
     
 #matchups(23,32)
 #matchups("fire","none")
