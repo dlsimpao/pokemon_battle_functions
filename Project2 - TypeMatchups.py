@@ -1,7 +1,4 @@
-#P-Type Counters - generates type matchups
-
-#improvements - better variable names to distinguish local and global variables
-#dual types
+#P-Type Counters - generates type matchups and move effectiveness
 
 def main():
     type_list = ["normal","fighting","flying","poison","ground","rock","bug","ghost","steel",\
@@ -100,6 +97,17 @@ def printMoveTypeReport(type_num,types_dict):
           "-are not very effective against:"+str(notVeryEffectiveAgainst)+"\n"+\
           "-are super effective against:"+str(effectiveAgainst))
 
+
+#creates a temp dictionary by filling out matchup effect values of ones
+def valAssgn(type1,type2,types_dict):
+    for key in types_dict:
+        if type1 not in types_dict[key]:
+            types_dict[key][type1] = 1
+        if type2 not in types_dict[key]:
+            types_dict[key][type2] = 1
+    
+
+#prints matchup report for single and dual types
 def printMatchupReport(choice_list,types_dict):
     #for dual types
     superResistantAgainst = []
@@ -110,7 +118,12 @@ def printMatchupReport(choice_list,types_dict):
     weakAgainst = []
     resistantAgainst = []
     immuneAgainst = []
-    print(len(choice_list))
+
+    #For matchups with effect of order 1, not included in the dictionary
+    type1_val = 1
+    type2_val = 1
+
+    
     if len(choice_list) == 1:
         type1 = choice_list[0]
         for key in types_dict:
@@ -131,20 +144,19 @@ def printMatchupReport(choice_list,types_dict):
               "-are weak against:"+str(weakAgainst))
     else:
         type1, type2 = choice_list[0],choice_list[1]
+        valAssgn(type1,type2,types_dict)
         for key in types_dict:
-            try:
-                if types_dict[key][type1]*types_dict[key][type2] == 0:
-                    immuneAgainst.append(key)
-                elif types_dict[key][type1]*types_dict[key][type2] == 0.25:
-                    superResistantAgainst.append(key)
-                elif types_dict[key][type1]*types_dict[key][type2] == 0.5:
-                    resistnatAgainst.append(key)
-                elif types_dict[key][type1]*types_dict[key][type2] == 2:
-                    weakAgainst.append(key)
-                elif types_dict[key][type1]*types_dict[key][type2] == 4:
-                    superWeakAgainst.append(key)
-            except:
-                continue
+            if types_dict[key][type1]*types_dict[key][type2] == 0:
+                immuneAgainst.append(key)
+            elif types_dict[key][type1]*types_dict[key][type2] == 0.25:
+                superResistantAgainst.append(key)
+            elif types_dict[key][type1]*types_dict[key][type2] == 0.5:
+                resistantAgainst.append(key)
+            elif types_dict[key][type1]*types_dict[key][type2] == 2:
+                weakAgainst.append(key)
+            elif types_dict[key][type1]*types_dict[key][type2] == 4:
+                superWeakAgainst.append(key)
+
         print("------------------------------------------------------------------------------------------------------\n"\
               "----------------------------------------Matchup Report----------------------------------------------")
         print(type1+"-"+type2+" types\n\n"+\
@@ -152,7 +164,7 @@ def printMatchupReport(choice_list,types_dict):
               "-are super resistant against"+str(superResistantAgainst)+"\n"+\
               "-are resistant against:"+str(resistantAgainst)+"\n"+\
               "-are weak against:"+str(weakAgainst)+"\n"+\
-              "-are super weak against:"+str(weakAgainst))
+              "-are super weak against:"+str(superWeakAgainst))
                     
         
 
@@ -165,7 +177,7 @@ def printEffectReport(choice_list):
     types_dict = {"normal":{"rock":0.5, "ghost":0, "steel":0.5},\
                         "fighting":{"normal":2, "flying":0.5, "poison":0.5,"rock":2,"bug":0.5,"ghost":0,"steel":2,"psychic":0.5,"ice":2,"dark":2,"fairy":0.5},\
                         "flying":{"fighting":2, "rock":0.5, "bug":2,"steel":0.5, "grass":2, "electric":0.5},\
-                        "poison":{"poison":0.5,"ground":0.5, "rock":0.5, "ghost":0.5,"steel":0,"grass":2,"fairy":0.5},\
+                        "poison":{"poison":0.5,"ground":0.5, "rock":0.5, "ghost":0.5,"steel":0,"grass":2,"fairy":2},\
                         "ground":{"flying":0, "poison":2,"rock":2,"bug":0.5,"steel":2,"fire":2,"grass":0.5,"electric":2},\
                         "rock":{"fighting":0.5,"flying":2,"ground":0.5,"bug":2,"steel":0.5,"fire":2,"ice":2},\
                         "bug":{"fighting":0.5,"flying":0.5,"poison":0.5,"ghost":0.5,"steel":0.5,"fire":0.5,"grass":2,"psychic":2,"dark":2,"fairy":0.5},\
@@ -179,11 +191,9 @@ def printEffectReport(choice_list):
                         "ice":{"flying":2,"ground":2,"steel":0.5,"fire":0.5,"water":0.5,"grass":2,"ice":0.5,"dragon":2},\
                         "dragon":{"steel":0.5,"dragon":2,"fairy":0},\
                         "dark":{"fighting":0.5,"ghost":2,"psychic":2,"dark":0.5,"fairy":0.5},\
-                        "fairy":{"fighting":2,"poison":2,"steel":0.5,"fire":0.5,"dragon":2,"dark":2}}
+                        "fairy":{"fighting":2,"poison":0.5,"steel":0.5,"fire":0.5,"dragon":2,"dark":2}}
 
-    
-
-
+    #prints reports depending on single and dual type
     if len(choice_list) == 2:
         type1, type2 = choice_list[0],choice_list[1]
         printMoveTypeReport(type1,types_dict)
@@ -194,25 +204,6 @@ def printEffectReport(choice_list):
         type1 = choice_list[0]
         printMoveTypeReport(type1,types_dict)
         printMatchupReport(choice_list,types_dict)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
