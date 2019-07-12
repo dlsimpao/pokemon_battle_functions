@@ -21,19 +21,14 @@ def main():
 #choice check1
 def choiceCheck1(choice_list):
     ans2 = input("You have chosen: "+str(choice_list)+"\nDo you want to change your choice? Yes | No?\n")
-    while not validAnswer(ans2):
-        ans2 = input("Do you want to make any changes? Yes | No?\n")
-        ans2 = ans2.lower()
-    return ans2
-
-#for yes and no questions
-def validAnswer(ans):
-    valid = False
-    ans = ans.lower()
-    if ans == "yes" or "no":
-        valid = True
-    return valid
-
+    if ans2.lower() == "yes":
+        main()
+    elif ans2.lower() == "no":
+        pass
+    else:
+        print("Please enter a valid answer")
+        choiceCheck1(choice_list)
+        
 #identifies valids from user input; returns a list of valid types
 def askForTypes(type_list):
     ans1 = input("Please enter up to two different valid types.\n")
