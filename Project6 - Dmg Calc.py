@@ -6,7 +6,7 @@ import random
 #gen - 1,2,3,4,5,6,7,8,9
 #myMoveType - types
 #targets - 1,2
-#badge - T/F
+#earnedBadgeType - T/F
 
 #A level 75 glaceon, no burn, no items, attack stat of 123, - uses Ice Fang of power 65. STAB 
 #against Garchomp with Def 163 in GEN 6. No crit. typeMatchup has a double weakness, typeMatch = 4
@@ -17,9 +17,11 @@ import random
 #level 75, power of 65, attack of 123, 163, mod 
 
 def main():
-    mod = getModifier(6,"ice",1,False,"normal",50,1,True, 4, False, None)
+    mod, modInt = getModifier(6,"ice",1,False,"normal",50,1,True, 4, False, None)
     damage = showDamageOutput(75, 65, 123, 163, mod)
-    print("On average, you deal ",damage,"damage." )
+    damageInt = [showDamageOutput(75,65,123,163,x) for x in modInt]
+    print("On average, you deal ",int(damage),"damage.\n"\
+          "Depending on luck, your damage varies from"+str([int(x) for x in damageInt]))
     
 
 def getModifier(gen, myMoveType, targets, earnedBadgeType, weather, speed, crit_other, STAB, typeMatch, burn, other):
@@ -49,15 +51,6 @@ def getModifier(gen, myMoveType, targets, earnedBadgeType, weather, speed, crit_
         else:
             mod_list.append(1.5)
 
-    #random
-    if gen > 3:
-        #randval = random.uniform(0.85,1)
-        randval = 0.925
-    else:
-        randval = random.randint(217,255)
-        randval = randval/255
-    mod_list.append(randval)
-
     #STAB
     if STAB:
         mod_list.append(1.5)
@@ -73,9 +66,22 @@ def getModifier(gen, myMoveType, targets, earnedBadgeType, weather, speed, crit_
     if other != None:
         mod_list.append(other)
 
-    #return modifier
+    #modifier before random
     modifier = multiplyInList(mod_list)
-    return modifier
+
+    #random
+    if gen > 3:
+        #randval = random.uniform(0.85,1) #uncomment for variance
+        randval = 0.925 #average value
+        modifier_confInt = [modifier*x for x in [0.85,1]]#supplement to random: confidence interval
+    else:
+        randval = random.randint(217,255)
+        randval = randval/255
+        modifier_confInt = [modifier * x for x in [217/255, 1]]#supplement to random: confidence interval
+        
+    modifier = modifier * randval
+    
+    return modifier, modifier_confInt
         
 
 def prob_getCrit(speed, other):
