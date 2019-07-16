@@ -207,7 +207,7 @@ def printEffectReport(choice_list):
     
 
     
-main()
+#main()
     
 #matchups(23,32)
 #matchups("fire","none")
