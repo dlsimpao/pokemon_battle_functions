@@ -1,4 +1,6 @@
 #P-Type Counters - generates type matchups and move effectiveness
+# to work, uncomment main() below
+
 
 def main():
     type_list = ["normal","fighting","flying","poison","ground","rock","bug","ghost","steel",\
@@ -71,9 +73,7 @@ def isValidType(type1,typeList):
 ##                type2.lower()
 ##            valid = True
 
-
-def printMoveTypeReport(type_num,types_dict):
-
+def getMoveTypeEffects(type_num, types_dict):
     noEffectAgainst = []
     notVeryEffectiveAgainst = []
     effectiveAgainst = []
@@ -85,6 +85,10 @@ def printMoveTypeReport(type_num,types_dict):
             notVeryEffectiveAgainst.append(key)
         elif types_dict[type_num][key] == 2:
             effectiveAgainst.append(key)
+    return noEffectAgainst,notVeryEffectiveAgainst,effectiveAgainst
+
+def printMoveTypeReport(type_num,types_dict):
+    noEffectAgainst,notVeryEffectiveAgainst,effectiveAgainst = getMoveTypeEffects(type_num,types_dict)
     print("------------------------------------------------------------------------------------------------------\n"\
           "----------------------------------------Move Type Report----------------------------------------------")
     print(type_num+"-type moves\n\n"+\
@@ -102,8 +106,35 @@ def valAssgn(type1,type2,types_dict):
             types_dict[key][type2] = 1
     
 
-#prints matchup report for single and dual types
+#prints the matchups based on effectiveness
 def printMatchupReport(choice_list,types_dict):
+    immuneAgainst, superResistantAgainst, resistantAgainst, weakAgainst,superWeakAgainst = getEffectMatch(choice_list, types_dict)
+    try:
+        type1 = choice_list[0]
+    except:
+        pass
+    else:
+        type2 = choice_list[1]
+        
+    if len(choice_list) == 1:
+        print("------------------------------------------------------------------------------------------------------\n"\
+              "----------------------------------------Matchup Report----------------------------------------------")
+        print(type1+"-types\n\n"+\
+              "-are immune against"+str(immuneAgainst)+"\n"+\
+              "-are resistant against:"+str(resistantAgainst)+"\n"+\
+              "-are weak against:"+str(weakAgainst))
+    else:
+        print("------------------------------------------------------------------------------------------------------\n"\
+              "----------------------------------------Matchup Report----------------------------------------------")
+        print(type1+"-"+type2+" types\n\n"+\
+              "-are immune against"+str(immuneAgainst)+"\n"+\
+              "-are super resistant against"+str(superResistantAgainst)+"\n"+\
+              "-are resistant against:"+str(resistantAgainst)+"\n"+\
+              "-are weak against:"+str(weakAgainst)+"\n"+\
+              "-are super weak against:"+str(superWeakAgainst))
+
+#retuns lists of the chosen types' varying matchups
+def getEffectMatch(choice_list, types_dict):
     #for dual types
     superResistantAgainst = []
     superWeakAgainst = []
@@ -131,12 +162,7 @@ def printMatchupReport(choice_list,types_dict):
                     weakAgainst.append(key)
             except:
                 pass
-        print("------------------------------------------------------------------------------------------------------\n"\
-              "----------------------------------------Matchup Report----------------------------------------------")
-        print(type1+"-types\n\n"+\
-              "-are immune against"+str(immuneAgainst)+"\n"+\
-              "-are resistant against:"+str(resistantAgainst)+"\n"+\
-              "-are weak against:"+str(weakAgainst))
+
     else:
         type1, type2 = choice_list[0],choice_list[1]
         valAssgn(type1,type2,types_dict)
@@ -151,21 +177,12 @@ def printMatchupReport(choice_list,types_dict):
                 weakAgainst.append(key)
             elif types_dict[key][type1]*types_dict[key][type2] == 4:
                 superWeakAgainst.append(key)
-
-        print("------------------------------------------------------------------------------------------------------\n"\
-              "----------------------------------------Matchup Report----------------------------------------------")
-        print(type1+"-"+type2+" types\n\n"+\
-              "-are immune against"+str(immuneAgainst)+"\n"+\
-              "-are super resistant against"+str(superResistantAgainst)+"\n"+\
-              "-are resistant against:"+str(resistantAgainst)+"\n"+\
-              "-are weak against:"+str(weakAgainst)+"\n"+\
-              "-are super weak against:"+str(superWeakAgainst))
-                    
-        
+    return immuneAgainst, superResistantAgainst, resistantAgainst, weakAgainst,superWeakAgainst
+    
 
 
 
-#gets chosen types and prints report
+#prints report
 def printEffectReport(choice_list): 
 
     #dictionary of all type effects
