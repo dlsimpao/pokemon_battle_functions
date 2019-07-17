@@ -245,6 +245,4 @@ def printEffectReport(choice_list):
     
 #main()
 #printEffectReport(["Fire","Flying"])
-#matchups(23,32)
-#matchups("fire","none")
-#matchups("Fire","fighting")
+printEffectReport(["Fire"])
