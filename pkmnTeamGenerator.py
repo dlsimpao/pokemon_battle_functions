@@ -1,9 +1,8 @@
 #random Pokemon party generator
-#create optimal team generator (instead of random)
 
 import random
 
-def genPokeTeam():
+def genPokeTeam(num):
     pokeTeam_list = []
     pokeName_dict = {}
 
@@ -17,7 +16,7 @@ def genPokeTeam():
         pokeName_dict[i] = line[0]
         i += 1
 
-    while len(pokeTeam_list) != 6:
+    while len(pokeTeam_list) != num:
         ranVal = random.randint(1,len(pokeName_dict))
         pokeTeam_list.append(pokeName_dict[ranVal])
     return pokeTeam_list
