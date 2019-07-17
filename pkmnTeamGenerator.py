@@ -1,4 +1,5 @@
 #random Pokemon party generator
+#create optimal team generator (instead of random)
 
 import random
 
