@@ -1,12 +1,23 @@
 #random Pokemon party generator
 
-import PBattleSim.py as pbsim
 
-pokeName_list = []
+import PBattleSim as pbsim
+import random
 
-fHandle = open("PGenALL170719.csv")
-header = strNspl(header)
+def genPokeTeam():
+    pokeTeam_list = []
+    pokeName_dict = {}
+
+    fHandle = open("PGenALL170719.csv")
+    fHandle.readline()
+    i = 1
     for line in fHandle:
         line = pbsim.strNspl(line)
-        pokeName_list.append(line)
-print(pokeName_list)
+        pokeName_dict[i] = line[0]
+        i += 1
+
+    while len(pokeTeam_list) != 6:
+        ranVal = random.randint(1,len(pokeName_dict))
+        pokeTeam_list.append(pokeName_dict[ranVal])
+    return pokeTeam_list
+
