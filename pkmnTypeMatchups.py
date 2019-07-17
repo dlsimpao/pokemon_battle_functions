@@ -245,4 +245,4 @@ def printEffectReport(choice_list):
     
 #main()
 #printEffectReport(["Fire","Flying"])
-printEffectReport(["Fire"])
+#printEffectReport(["Fire"])
