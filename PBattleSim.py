@@ -106,7 +106,7 @@ def optimizeParty(party_list,opp_list,type_dict):
                             oppList += [oppMon]
                         #adds to dictionary
                         myOptLineUp[myMon] = oppList
-        for oppTypes in oppTypesMatchup[oppMon][3]: #-------------------------------needs work
+        for oppTypes in oppTypesMatchup[oppMon][3]:
             #for each pokemon in my party
             for myMon in myTypes_dict:   
                 if oppTypes in myTypes_dict[myMon]:
@@ -124,7 +124,10 @@ def optimizeParty(party_list,opp_list,type_dict):
                             oppList2 += [oppMon]
                         #adds to dictionary
                         myOptLineUp[myMon] = oppList2
-    print(myOptLineUp)
+    print(myOptLineUp)#works
+    #NEXT: normal opposition, matchups to avoid
+    #NEXT: get and print functions
+    
 
 def space():
     print("\n\n\n")
