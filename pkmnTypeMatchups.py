@@ -236,8 +236,15 @@ def printEffectReport(choice_list):
         printMoveTypeReport(type1,types_dict)
         printMatchupReport(choice_list)
 
-
-
+#-----------------------------For use in other files
+#function takes a list of sublists of strings and capitalizes the first letter each string in the sublist
+#returns a list of sublists
+def capLists(alist):
+    retList = []
+    for sublist in alist:
+        sublist = [x.title() for x in sublist]
+        retList.append(sublist)
+    return retList
 
 
     
