@@ -1,7 +1,5 @@
 #random Pokemon party generator
 
-
-import PBattleSim as pbsim
 import random
 
 def genPokeTeam():
@@ -12,7 +10,9 @@ def genPokeTeam():
     fHandle.readline()
     i = 1
     for line in fHandle:
-        line = pbsim.strNspl(line)
+        line = line.strip("\n")
+        line = line.split(",")
+
         pokeName_dict[i] = line[0]
         i += 1
 
@@ -20,4 +20,7 @@ def genPokeTeam():
         ranVal = random.randint(1,len(pokeName_dict))
         pokeTeam_list.append(pokeName_dict[ranVal])
     return pokeTeam_list
+
+##alist = genPokeTeam()
+##print(alist)
 
