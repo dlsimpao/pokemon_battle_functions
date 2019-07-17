@@ -77,6 +77,8 @@ def getMoveTypeEffects(type_num, types_dict):
     noEffectAgainst = []
     notVeryEffectiveAgainst = []
     effectiveAgainst = []
+
+    type_num = type_num.lower()
     
     for key in types_dict[type_num]:
         if types_dict[type_num][key] == 0:
@@ -144,14 +146,9 @@ def getEffectMatch(choice_list, types_dict):
     weakAgainst = []
     resistantAgainst = []
     immuneAgainst = []
-
-    #For matchups with effect of order 1, not included in the dictionary
-    type1_val = 1
-    type2_val = 1
-
     
     if len(choice_list) == 1:
-        type1 = choice_list[0]
+        type1 = choice_list[0].lower()
         for key in types_dict:
             try:
                 if types_dict[key][type1] == 0:
@@ -206,6 +203,7 @@ def printEffectReport(choice_list):
                         "fairy":{"fighting":2,"poison":0.5,"steel":0.5,"fire":0.5,"dragon":2,"dark":2}}
 
     #prints reports depending on single and dual type
+    #---------------------------------------separate the print reports
     if len(choice_list) == 2:
         type1, type2 = choice_list[0],choice_list[1]
         printMoveTypeReport(type1,types_dict)
