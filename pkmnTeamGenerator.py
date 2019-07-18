@@ -1,5 +1,10 @@
-#random Pokemon party generator
+#Pokemon party generator
+#possible additions
+#1. Optimized Pokemon party gen
+#2. Guided Pokemon party creator
+#3. Themed Party gen
 
+import conventionalCode as cc
 import random
 
 def genPokeTeam(num):
@@ -10,8 +15,7 @@ def genPokeTeam(num):
     fHandle.readline()
     i = 1
     for line in fHandle:
-        line = line.strip("\n")
-        line = line.split(",")
+        line = cc.strNspl(line)
 
         pokeName_dict[i] = line[0]
         i += 1
