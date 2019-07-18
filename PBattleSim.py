@@ -30,7 +30,11 @@ def main():
     #Opp
     oppOptParty = optimizeParty(oppPokeParty, myPokeParty,natPokeType_dict)
     strongMine = identifyStrongOpp(oppOptParty, myPokeParty)
-    
+
+    printParty(myPokeParty,natPokeType_dict)
+    cc.space(2)
+    printParty(oppPokeParty,natPokeType_dict)
+    cc.space(2)
     printFavorMatch(myOptParty, strongMine)
     cc.space(2)
     printAvoidMatch(oppOptParty)
@@ -73,21 +77,21 @@ def optimizeParty(party_list,opp_list,type_dict):
     
     for mon in party_list:
         myTypes_dict[mon] = getType(mon,type_dict)
-    print("My Pokemon: "+str(myTypes_dict))
+    #print("My Pokemon: "+str(myTypes_dict))
     for mon in opp_list:
         oppTypes_dict[mon] = getType(mon,type_dict)
-    cc.space(3)
-    print("Opposing Pokemon: "+str(oppTypes_dict))
+    #cc.space(3)
+    #print("Opposing Pokemon: "+str(oppTypes_dict))
 
     #for each pokemon in opponents party, find their matchup effectiveness
     for mon in oppTypes_dict:
         immuneAgainst, superResistantAgainst, resistantAgainst, weakAgainst,superWeakAgainst = tm.getEffectMatch(oppTypes_dict[mon])
         effect_list = cc.capLists([immuneAgainst, superResistantAgainst, resistantAgainst, weakAgainst,superWeakAgainst])
         oppTypesMatchup[mon] = effect_list
-    cc.space(3)
+    #cc.space(3)
     
-    print(oppTypesMatchup)
-    cc.space(3)
+    #print(oppTypesMatchup) #test
+    #cc.space(3)
     #print(oppTypesMatchup["Sneasel"][4])
     #given each opposing pokemon's weakness, arrange my party strategically
     #for each pokemon in opponent's party
@@ -102,14 +106,11 @@ def optimizeParty(party_list,opp_list,type_dict):
                         myOptLineUp[myMon] = oppMon
                     else:
                         #resets lists
-                        oppList = []
-                        if isinstance(myOptLineUp.get(myMon),list):
-                            oppList = myOptLineUp.get(myMon)
-                        else:
-                            oppList.append(myOptLineUp.get(myMon))
-                        #adds new info
+                        oppList = [myOptLineUp.get(myMon)]
+                        oppList = cc.rec_cascadeLists(oppList)
                         if oppMon not in oppList:
                             oppList += [oppMon]
+    
                         #adds to dictionary
                         myOptLineUp[myMon] = oppList
         for oppTypes in oppTypesMatchup[oppMon][3]:
@@ -121,16 +122,20 @@ def optimizeParty(party_list,opp_list,type_dict):
                     else:
                         #resets lists
                         oppList2 = []
-                        if isinstance(myOptLineUp.get(myMon),list):
-                            oppList2 = myOptLineUp.get(myMon)
-                        else:
-                            oppList2.append(myOptLineUp.get(myMon))
+##                        if isinstance(myOptLineUp.get(myMon),list):
+##                            oppList2 = myOptLineUp.get(myMon)
+##                        else:
+##                            oppList2.append(myOptLineUp.get(myMon))
                         #adds new info
+                        #resets lists
+                        oppList2 = [myOptLineUp.get(myMon)]
+                        oppList2 = cc.rec_cascadeLists(oppList2)
                         if oppMon not in oppList2:
                             oppList2 += [oppMon]
                         #adds to dictionary
                         myOptLineUp[myMon] = oppList2
-    #print(myOptLineUp)#works
+    print(myOptLineUp)#does not work
+    cc.space(3)
     return myOptLineUp
     #NEXT: normal opposition, matchups to avoid
     #NEXT: get and print functions
