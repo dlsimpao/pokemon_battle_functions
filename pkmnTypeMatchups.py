@@ -1,6 +1,8 @@
 #P-Type Counters - generates type matchups and move effectiveness
 # to work, uncomment main() below
 
+import conventionalCode as cc
+
 
 def main():
     type_list = ["normal","fighting","flying","poison","ground","rock","bug","ghost","steel",\
@@ -235,17 +237,6 @@ def printEffectReport(choice_list):
         type1 = choice_list[0]
         printMoveTypeReport(type1,types_dict)
         printMatchupReport(choice_list)
-
-#-----------------------------For use in other files
-#function takes a list of sublists of strings and capitalizes the first letter each string in the sublist
-#returns a list of sublists
-def capLists(alist):
-    retList = []
-    for sublist in alist:
-        sublist = [x.title() for x in sublist]
-        retList.append(sublist)
-    return retList
-
 
     
 
