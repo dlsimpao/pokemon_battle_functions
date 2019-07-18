@@ -1,6 +1,8 @@
 #P-Type Counters - generates type matchups and move effectiveness
 # to work, uncomment main() below
 
+import conventionalCode as cc
+
 
 def main():
     type_list = ["normal","fighting","flying","poison","ground","rock","bug","ghost","steel",\
@@ -236,15 +238,9 @@ def printEffectReport(choice_list):
         printMoveTypeReport(type1,types_dict)
         printMatchupReport(choice_list)
 
-
-
-
-
     
 
     
 #main()
-printEffectReport(["Fire","Flying"])
-#matchups(23,32)
-#matchups("fire","none")
-#matchups("Fire","fighting")
+#printEffectReport(["Fire","Flying"])
+#printEffectReport(["Fire"])
