@@ -2,6 +2,7 @@
 #central module for all Pokemon data
 import conventionalCode as cc
 
+
 #Pokemon name and type 
 pokeFile_dict = {"Pokemon":"PGenAll170719.csv", "Moves":"PokeAttackdex.csv"}
 #fHandle = open(pokeFile)
@@ -9,6 +10,7 @@ pokeFile_dict = {"Pokemon":"PGenAll170719.csv", "Moves":"PokeAttackdex.csv"}
 
 def getFHandle(pokeFilePar):
     try:
+        pokeFilePar = pokeFilePar.title()
         pokeFile = pokeFile_dict[pokeFilePar]
         fHandle = open(pokeFile)
     except:
@@ -32,6 +34,7 @@ def printData(fHandle):
 
 #automatically assumes 1st column as the keys to the dictionary
 def autoDict(fHandle, selectedColn_list = [], header = True):
+    #fHandle = getFHandle(fHandle)
     retDict = {}
     coln_dict = {}
 
@@ -43,6 +46,7 @@ def autoDict(fHandle, selectedColn_list = [], header = True):
         for name in selectedColn_list:
             if name not in hdr:
                 print(str(name)+" is not a valid column name.")
+                print("Please select from: "+str(hdr))
                 break
         c = 0 #column dictionary index
         for name in hdr:
@@ -54,40 +58,35 @@ def autoDict(fHandle, selectedColn_list = [], header = True):
         line = cc.strNspl(line)
         #if no columns are selected
         if selectedColn_list == []:
-            retDict[line[0]] = line[1:]
+            retDict[line[0]] = tuple(line[1:])
         #if the first column is selected
         elif hdr[0] in selectedColn_list:
-            for name in selectedColn_list:
-                selected = []
-                if name not in selected:
+            for name in selectedColn_list[1:]:
+                if line[0] not in retDict:
                     retDict[line[0]] = line[coln_dict[name]]
-                    selected.append(name)
                 else:
-                    selected = [retDict.get(i)]
-                    selected.append(line[0])
-                    selected = cc.rec_cascadeLists(selected)
-                    retDict[line[0]] = selected
-        #if any but the first column is selected
+                    oldColn = retDict.get(line[0])
+                    newColn = line[coln_dict[name]]
+                    comColn = cc.rec_cascadeTuples((oldColn,newColn))
+                    retDict[line[0]] = comColn
         else:
-            selected = []
-
+            moreColn = ()
             for name in selectedColn_list:
                 if i not in retDict:
                     retDict[i] = line[coln_dict[name]]
                 else:
-                    selected = [retDict.get(i)]
-                    selected.append(line[coln_dict[name]])
-                    retDict[i] = selected
+                    oldColn = retDict.get(i)
+                    newColn = line[coln_dict[name]]
+                    comColn = cc.rec_cascadeTuples((oldColn,newColn))
+                    retDict[i] = comColn
             i += 1
-
-
     return retDict
 
 
 #summarizes single and dual types
 #summarizes type relativity
 def pokeTypeSummary():
-    fHandle = getFHandle("Pokemon")
+    #fHandle = getFHandle("Pokemon")
     type_dict = autoDict(fHandle)
     dualTypeCount = 0
     for mon in type_dict:
@@ -101,7 +100,6 @@ def findDistinctTypes(fHandle):
     if fHandle.title() == "Moves":
         fHandle = getFHandle("Moves")
         types_dict = autoDict(fHandle, ["Type"])
-        print(types_dict)
         distType_list = []
         
         for key in types_dict:
@@ -111,7 +109,6 @@ def findDistinctTypes(fHandle):
     elif fHandle.title() == "Pokemon":
         fHandle = getFHandle("Pokemon")
         types_dict = autoDict(fHandle, ["Type I", "Type II"])
-        print(types_dict)
         distType_list = []
 
         for key in types_dict:
@@ -119,6 +116,29 @@ def findDistinctTypes(fHandle):
                 distType_list.append(types_dict[key])
                 
     return distType_list
-                
+
+
+#problem: unhashable type 'list' occurs when I try to count the distinct number of dual types
+def countDistinct(fHandle):
+    count_dict = {}
+    type_dict = autoDict(fHandle)
+
+    for types in type_dict:
+##        if isinstance(type_dict[types],list):
+##                type_dict[types] = tuple(type_dict[types])
+        if type_dict[types] not in count_dict:
+            count_dict[type_dict[types]] = 1
+        else:
+            count_dict[type_dict[types]] += 1
+    return count_dict
+
+def printRel(count_dict):
+    totCount = sum(count_dict.values())
+    retDict = {}
+    for i in count_dict:
+        print(i[:3]+"\t{:.2f}".format((count_dict[i]/totCount),3)+"\t"+\
+              str(count_dict[i]))
+        
+        
     
     
