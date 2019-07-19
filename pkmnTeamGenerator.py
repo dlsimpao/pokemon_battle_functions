@@ -25,6 +25,6 @@ def genPokeTeam(num):
         pokeTeam_list.append(pokeName_dict[ranVal])
     return pokeTeam_list
 
-##alist = genPokeTeam(6)
-##print(alist)
+alist = genPokeTeam(6)
+print(alist)
 
