@@ -56,3 +56,31 @@ def rec_cascadeLists(listOfLists):
 
 #print(rec_cascadeLists([1,2,3,[4,5,[6]]]))
 
+#function turns tuples of tuples into a single tuple
+def cascadeTuples(tupOfTups):
+    retTup = ()
+    for element in tupOfTups:
+        if not isinstance(element,tuple):
+            retTup += (element,)
+        else:
+            retTup += (*element,)
+    return retTup 
+
+
+#recursively detuples
+def rec_cascadeTuples(tupOfTups):
+    #checks if False is in the list comprehension
+    #list comprehension checks each element in list to see if it's a list, returns False if list
+    if False not in [True if not isinstance(x,tuple) else False for x in tupOfTups]:
+        return tupOfTups
+    else:
+        return rec_cascadeTuples(cascadeTuples(tupOfTups))
+
+#print(rec_cascadeTuples((1,((2,3),4,(5,6,(7))))))
+
+def printHorBarChart(count_dict):
+    bar = "]"
+    barStr = ""
+    for i in count_dict:
+        barStr = bar*count_dict[i]
+        print(i[:3]+":\t"+barStr)
