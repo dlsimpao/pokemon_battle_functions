@@ -78,9 +78,38 @@ def rec_cascadeTuples(tupOfTups):
 
 #print(rec_cascadeTuples((1,((2,3),4,(5,6,(7))))))
 
+#prints relative counts
+def printRel(count_dict):
+    totCount = sum(count_dict.values())
+    retDict = {}
+    for i in count_dict:
+        print("{:<20}".format(str(i))+"\t{:^15}".format("{:.4f}".format((count_dict[i]/totCount)),3)+"\t"+\
+              "{:^15}".format(str(count_dict[i])))
+
+#prints Horizontal bar charts
 def printHorBarChart(count_dict):
     bar = "]"
     barStr = ""
     for i in count_dict:
         barStr = bar*count_dict[i]
-        print(i[:3]+":\t"+barStr)
+        print("{:<20}".format(str(i))+"\t{:<30}".format(barStr))
+
+#lazy method, not efficient
+def printTop(num, count_dict):
+    top_list = [*count_dict.values()]
+    top_list.sort(reverse = True)
+    top_list = top_list[:num]
+
+    retDict = {}
+    
+    for j in top_list:
+        for i in count_dict:
+            if count_dict[i] == j and i not in retDict:
+                #retDict[i] = j
+                print("{:<20}".format(str(i))+"\t{:<30}".format(j))
+
+    
+
+
+
+
