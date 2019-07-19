@@ -119,26 +119,20 @@ def findDistinctTypes(fHandle):
 
 
 #problem: unhashable type 'list' occurs when I try to count the distinct number of dual types
-def countDistinct(fHandle):
+def countDistinct(poke_dict):
     count_dict = {}
-    type_dict = autoDict(fHandle)
-
-    for types in type_dict:
+    
+    for types in poke_dict:
 ##        if isinstance(type_dict[types],list):
 ##                type_dict[types] = tuple(type_dict[types])
-        if type_dict[types] not in count_dict:
-            count_dict[type_dict[types]] = 1
+        if poke_dict[types] not in count_dict:
+            count_dict[poke_dict[types]] = 1
         else:
-            count_dict[type_dict[types]] += 1
+            count_dict[poke_dict[types]] += 1
     return count_dict
 
-def printRel(count_dict):
-    totCount = sum(count_dict.values())
-    retDict = {}
-    for i in count_dict:
-        print(i[:3]+"\t{:.2f}".format((count_dict[i]/totCount),3)+"\t"+\
-              str(count_dict[i]))
+
         
-        
-    
+
+
     
