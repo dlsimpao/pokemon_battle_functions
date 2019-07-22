@@ -6,6 +6,27 @@ import fileinput
 #Pokemon name and type 
 pokeFile_dict = {"Pokemon":"PGenAll170719.csv", "Moves":"PokeAttackdex.csv"}
 #fHandle = open(pokeFile)
+
+types_dict = {"normal":{"rock":0.5, "ghost":0, "steel":0.5},\
+                        "fighting":{"normal":2, "flying":0.5, "poison":0.5,"rock":2,"bug":0.5,"ghost":0,"steel":2,"psychic":0.5,"ice":2,"dark":2,"fairy":0.5},\
+                        "flying":{"fighting":2, "rock":0.5, "bug":2,"steel":0.5, "grass":2, "electric":0.5},\
+                        "poison":{"poison":0.5,"ground":0.5, "rock":0.5, "ghost":0.5,"steel":0,"grass":2,"fairy":2},\
+                        "ground":{"flying":0, "poison":2,"rock":2,"bug":0.5,"steel":2,"fire":2,"grass":0.5,"electric":2},\
+                        "rock":{"fighting":0.5,"flying":2,"ground":0.5,"bug":2,"steel":0.5,"fire":2,"ice":2},\
+                        "bug":{"fighting":0.5,"flying":0.5,"poison":0.5,"ghost":0.5,"steel":0.5,"fire":0.5,"grass":2,"psychic":2,"dark":2,"fairy":0.5},\
+                        "ghost":{"normal":0,"ghost":2,"psychic":2,"dark":0.5},\
+                        "steel":{"rock":2,"steel":0.5,"fire":0.5,"water":0.5,"electric":0.5,"ice":2,"fairy":2},\
+                        "fire":{"rock":0.5,"bug":2,"steel":2,"fire":0.5,"water":0.5,"grass":2,"ice":2,"dragon":0.5},\
+                        "water":{"ground":2,"rock":2,"fire":2,"water":0.5,"grass":0.5,"dragon":0.5},\
+                        "grass":{"flying":0.5,"poison":0.5,"ground":2,"rock":2,"bug":0.5,"steel":0.5,"fire":0.5,"water":2,"grass":0.5,"dragon":0.5},\
+                        "electric":{"flying":2,"ground":0,"water":2,"grass":0.5,"electric":0.5,"dragon":0.5},\
+                        "psychic":{"fighting":2,"poison":2,"steel":0.5,"psychic":0.5,"dark":0},\
+                        "ice":{"flying":2,"ground":2,"steel":0.5,"fire":0.5,"water":0.5,"grass":2,"ice":0.5,"dragon":2},\
+                        "dragon":{"steel":0.5,"dragon":2,"fairy":0},\
+                        "dark":{"fighting":0.5,"ghost":2,"psychic":2,"dark":0.5,"fairy":0.5},\
+                        "fairy":{"fighting":2,"poison":0.5,"steel":0.5,"fire":0.5,"dragon":2,"dark":2}}
+def getTypes_dict():
+    return types_dict
     
 
 def getFHandle(pokeFilePar, action = "r"):
@@ -43,7 +64,6 @@ def printData(fHandle):
         line = cc.strNspl(line)
         print(line)
 
-=======
 ##def writeHeader(pokeFilePar):
 ##    headerStr = ""
 ##    header = []
@@ -64,27 +84,26 @@ def printData(fHandle):
 ##    fHandle.close()
 ##
 
+    
 
-#automatically assumes 1st column as the keys to the dictionary
-def autoDict(fHandle, selectedColn_list = [], header = True):
+#creates a dictionary based on a given list of column names
+def autoDict(fHandle, selectedColn_list = [], index = True):
     #fHandle = getFHandle(fHandle)
     retDict = {}
     coln_dict = {}
-
-    if selectedColn_list != []:
-        header = True
         
-    if header:
-        hdr = getHeader(fHandle)
-        for name in selectedColn_list:
-            if name not in hdr:
-                print(str(name)+" is not a valid column name.")
-                print("Please select from: "+str(hdr))
-                break
-        c = 0 #column dictionary index
-        for name in hdr:
-            coln_dict[name] = c
-            c += 1
+    #For now, I assume, a header is given for all files
+    hdr = getHeader(fHandle)
+    for name in selectedColn_list:
+        if name not in hdr:
+            print(str(name)+" is not a valid column name.")
+            print("Please select from: "+str(hdr))
+            break
+        
+    c = 0 #column dictionary index
+    for name in hdr:
+        coln_dict[name] = c
+        c += 1
                       
     i = 0 #specific column index
     for line in fHandle:
@@ -93,7 +112,7 @@ def autoDict(fHandle, selectedColn_list = [], header = True):
         if selectedColn_list == []:
             retDict[line[0]] = tuple(line[1:])
         #if the first column is selected
-        elif hdr[0] in selectedColn_list:
+        elif hdr[0] in selectedColn_list and index == False:
             for name in selectedColn_list[1:]:
                 if line[0] not in retDict:
                     retDict[line[0]] = line[coln_dict[name]]
@@ -162,7 +181,6 @@ def countDistinct(poke_dict):
         else:
             count_dict[poke_dict[types]] += 1
     return count_dict
-
 
 
 
