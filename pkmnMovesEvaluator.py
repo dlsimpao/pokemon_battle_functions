@@ -1,5 +1,11 @@
-#Pokemon party evaluator
+#Pokemon Moves Evaluator
 #evaluates the party based 
+
+
+import random
+import PMonsterClass as pmc
+import conventionalCode as cc
+
 import conventionalCode as cc
 import pkmnData as pd
 import pkmnTeamGenerator as ptg
@@ -25,3 +31,4 @@ def getMoveEvals(moves_list, pkmnMT_dict,types_dict):
     return evalMoves_dict
 
 main()
+
