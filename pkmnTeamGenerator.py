@@ -56,8 +56,8 @@ def genPokeMoves(num,typeList = []):
     return pokeMoves
         
 
-moveList = genPokeMoves(4,["Electric"])
-print(moveList)
+##moveList = genPokeMoves(4,["Electric"])
+##print(moveList)
 
 
 ##alist = genPokeTeam(6)
