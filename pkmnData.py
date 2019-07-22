@@ -43,6 +43,7 @@ def printData(fHandle):
         line = cc.strNspl(line)
         print(line)
 
+=======
 ##def writeHeader(pokeFilePar):
 ##    headerStr = ""
 ##    header = []
@@ -63,7 +64,6 @@ def printData(fHandle):
 ##    fHandle.close()
 ##
 
-    
 
 #automatically assumes 1st column as the keys to the dictionary
 def autoDict(fHandle, selectedColn_list = [], header = True):
