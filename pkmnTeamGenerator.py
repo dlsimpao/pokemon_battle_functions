@@ -52,7 +52,7 @@ def genPokeMoves(num,typeList = []):
         while len(pokeMoves) != num:
             ranVal = random.randint(1,len(pokeMoves_dict))
             if pokeMoves_dict[ranVal] not in pokeMoves:
-                pokeMoves.append(pokeMoves_dict[ranVal])
+                pokeMoves.append(pokeMoves_dict[ranVal][0])
     return pokeMoves
         
 
