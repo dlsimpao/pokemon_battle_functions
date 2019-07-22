@@ -1,25 +1,36 @@
 #Pokedata
 #central module for all Pokemon data
 import conventionalCode as cc
-
+import fileinput
 
 #Pokemon name and type 
 pokeFile_dict = {"Pokemon":"PGenAll170719.csv", "Moves":"PokeAttackdex.csv"}
 #fHandle = open(pokeFile)
     
 
-def getFHandle(pokeFilePar):
+def getFHandle(pokeFilePar, action = "r"):
     try:
         pokeFilePar = pokeFilePar.title()
         pokeFile = pokeFile_dict[pokeFilePar]
-        fHandle = open(pokeFile)
+        fHandle = open(pokeFile, action)
     except:
         print("Please enter a valid file name:")
         for file in pokeFile_dict:
             print(file)
+        print("Try typing a valid action: w+, w, r, a+")
         exit()
     return fHandle
-    
+
+def getFileName(pokeFilePar):
+    fileName = ""
+    try:
+        pokeFilePar = pokeFilePar.title()
+        fileName = pokeFile_dict[pokeFilePar]
+    except:
+        print("Please enter a valid file name:")
+        for file in pokeFile_dict:
+            print(file)
+    return fileName
 
 def getHeader(fHandle):
     header = fHandle.readline()
@@ -31,6 +42,28 @@ def printData(fHandle):
     for line in fHandle:
         line = cc.strNspl(line)
         print(line)
+
+##def writeHeader(pokeFilePar):
+##    headerStr = ""
+##    header = []
+##    #not all lines have filled column values and thus, may vary
+##    #maxcolnCount keeps track of the largest column entries of any line
+##    
+##    fHandle = getFHandle(pokeFilePar, action = "r")
+##    hdrCount = len(getHeader(fHandle))
+##    fHandle = getFHandle(pokeFilePar, action = "a+")
+##    
+##    while len(header) < hdrCount:
+##        hdrName = input("Please enter header name for column "+str(len(header)+1)+"/"+str(hdrCount)+":\n")
+##        header.append(hdrName)
+##
+##    for hdrName in header:
+##        headerStr += str(hdrName)+", "
+##    fHandle.write(headerStr)
+##    fHandle.close()
+##
+
+    
 
 #automatically assumes 1st column as the keys to the dictionary
 def autoDict(fHandle, selectedColn_list = [], header = True):
@@ -93,7 +126,6 @@ def pokeTypeSummary():
         if type_dict[mon][1] == "":
             dualTypeCount += 1
     
-    #print(findDistinctTypes(type
 
 def findDistinctTypes(fHandle):
     #fHandle = getFHandle("Moves")
@@ -132,7 +164,6 @@ def countDistinct(poke_dict):
     return count_dict
 
 
-        
 
 
     
