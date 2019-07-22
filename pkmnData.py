@@ -8,15 +8,16 @@ pokeFile_dict = {"Pokemon":"PGenAll170719.csv", "Moves":"PokeAttackdex.csv"}
 #fHandle = open(pokeFile)
     
 
-def getFHandle(pokeFilePar):
+def getFHandle(pokeFilePar, action = "r"):
     try:
         pokeFilePar = pokeFilePar.title()
         pokeFile = pokeFile_dict[pokeFilePar]
-        fHandle = open(pokeFile)
+        fHandle = open(pokeFile, action)
     except:
         print("Please enter a valid file name:")
         for file in pokeFile_dict:
             print(file)
+        print("Try typing a valid action: w+, w, r, a+")
         exit()
     return fHandle
     
@@ -31,6 +32,8 @@ def printData(fHandle):
     for line in fHandle:
         line = cc.strNspl(line)
         print(line)
+
+def writeHeader(
 
 #automatically assumes 1st column as the keys to the dictionary
 def autoDict(fHandle, selectedColn_list = [], header = True):
