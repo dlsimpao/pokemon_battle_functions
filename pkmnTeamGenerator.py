@@ -1,66 +1,65 @@
-#Pokemon party evaluator
-#evaluates the party based 
+#Pokemon party generator
+#possible additions
+#1. Optimized Pokemon party gen
+#2. Guided Pokemon party creator
+#3. Themed Party gen
 
-import random
-import PMonsterClass as pmc
 import conventionalCode as cc
-def main():
-#file
-    pokeFile = "PGenAll170719.csv"
+import pkmnData as pd
+import PMonsterClass as pmc
+import random
 
-    #fHandle
-    fHandle = open(pokeFile)
+class pkmnTeam():
+    def __init__(self, pkmn_list):
+        self.pkmn_list = pkmn_list
+        self.partyCount = len(pkmn_list)
 
-    #1. generate a pokeparty, identify the individual types
-
-    #transfers csv file info to dictionary
-    pokeNameTypes_dict = {}
-    pokePartyData_dict = {}
-
-    fHandle.readline()
-    for line in fHandle:
-        line = cc.strNspl(line)
-        pokeNameTypes_dict[line[0]] = [line[1],line[2]] #<----------------------------
-
-    pokeParty = genPokeTeam(1, pokeFile)
-
-    for mon in pokeParty:
-        pokePartyData_dict[mon] = pokeNameTypes_dict[mon]
-#checkpoint
-    for mon in pokeParty:
-        print(mon + " " +str(pokePartyData_dict[mon]))
-#--------------
-    #2. set moves
-    for mon in pokeParty:
-        
-        nickName1 = pmc.Pokemon("Magneton")
-        nickName2 = pmc.Pokemon("Ambipom")
-        nickName3 = pmc.Pokemon("Hippopotas")
-        nickName4 = pmc.Pokemon("Gastly")
-        nickName5 = pmc.Pokemon("Vaporeon")
-        nickName6 = pmc.Pokemon("Beedrill")
-    pokeClass_list = [nickName1,nickName2,nickName3,nickName4,nickName5,nickName6]
-    
-        
-    
-
-#from pkmnTeamGenerator b/c modules cannot mutually reference each other
-def genPokeTeam(num, pokeFile):
+def genPokeTeam(num):
     pokeTeam_list = []
     pokeName_dict = {}
 
-    fHandle = open(pokeFile)
-    fHandle.readline()
-    i = 1
-    for line in fHandle:
-        line = cc.strNspl(line)
-
-        pokeName_dict[i] = line[0] #<---------------------------------------
-        i += 1
+    fHandle = pd.getFHandle("Pokemon")
+    #fHandle.readline()
+    pokeName_dict = pd.autoDict(fHandle,["Pokemon"])
 
     while len(pokeTeam_list) != num:
         ranVal = random.randint(1,len(pokeName_dict))
         pokeTeam_list.append(pokeName_dict[ranVal])
     return pokeTeam_list
 
-main()
+
+def genPokeMoves(num,typeList = []):
+    pokeMoves = []
+    filtMoves_dict = {} #for type-specific moves
+    
+    fHandle = pd.getFHandle("Moves")
+    pokeMoves_dict = pd.autoDict(fHandle,["Name","Type"],index = True)
+
+    #type-specific move setting
+    if typeList != []:
+        typeList = [x.title() for x in typeList]
+        f = 1#new index for filtered dictionary
+        for i in pokeMoves_dict:
+            #print(pokeMoves_dict[move][1].title())
+            if pokeMoves_dict[i][1].title() in typeList:
+                filtMoves_dict[f] = pokeMoves_dict[i][0]
+                f += 1
+        while len(pokeMoves) != num:
+            ranVal = random.randint(1,len(filtMoves_dict))
+            if filtMoves_dict[ranVal] not in pokeMoves:
+                pokeMoves.append(filtMoves_dict[ranVal])
+    else:     
+        while len(pokeMoves) != num:
+            ranVal = random.randint(1,len(pokeMoves_dict))
+            if pokeMoves_dict[ranVal] not in pokeMoves:
+                pokeMoves.append(pokeMoves_dict[ranVal])
+    return pokeMoves
+        
+
+moveList = genPokeMoves(4,["Electric"])
+print(moveList)
+
+
+##alist = genPokeTeam(6)
+##print(alist)
+
