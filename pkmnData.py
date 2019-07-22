@@ -43,7 +43,7 @@ def printData(fHandle):
         line = cc.strNspl(line)
         print(line)
 
-=======
+
 ##def writeHeader(pokeFilePar):
 ##    headerStr = ""
 ##    header = []
