@@ -27,21 +27,47 @@ def genPokeTeam(num):
         pokeTeam_list.append(pokeName_dict[ranVal])
     return pokeTeam_list
 
-
-def genPokeMoves(num,typeList = []):
+#include category restriction?
+#function takes in number of pokeMoves, type and type category restrictions
+def genPokeMoves(num,typeList = [], cat = []):
     pokeMoves = []
     filtMoves_dict = {} #for type-specific moves
     
     fHandle = pd.getFHandle("Moves")
-    pokeMoves_dict = pd.autoDict(fHandle,["Name","Type"],index = True)
+    pokeMoves_dict = pd.autoDict(fHandle,["Name","Type","Cat."],index = True)
 
-    #type-specific move setting
-    if typeList != []:
+    #fills in the filtered dictionary based on restrictions given
+    if typeList != [] and cat != []: #if type and category restrictions apply
+        typeList = [x.title() for x in typeList]
+        f = 1#new index for filtered dictionary
+        for i in pokeMoves_dict:
+            #print(pokeMoves_dict[move][1].title())
+            if pokeMoves_dict[i][1].title() in typeList\
+               and pokeMoves_dict[i][2].title() in cat:
+                filtMoves_dict[f] = pokeMoves_dict[i][0]
+                f += 1
+        while len(pokeMoves) != num:
+            ranVal = random.randint(1,len(filtMoves_dict))
+            if filtMoves_dict[ranVal] not in pokeMoves:
+                pokeMoves.append(filtMoves_dict[ranVal])
+    elif typeList != [] and cat == []: #if type restrictions apply
         typeList = [x.title() for x in typeList]
         f = 1#new index for filtered dictionary
         for i in pokeMoves_dict:
             #print(pokeMoves_dict[move][1].title())
             if pokeMoves_dict[i][1].title() in typeList:
+                filtMoves_dict[f] = pokeMoves_dict[i][0]
+                f += 1
+        while len(pokeMoves) != num:
+            ranVal = random.randint(1,len(filtMoves_dict))
+            if filtMoves_dict[ranVal] not in pokeMoves:
+                pokeMoves.append(filtMoves_dict[ranVal])
+    elif typeList == [] and cat == []: #if category restrictions apply
+        typeList = [x.title() for x in typeList]
+        f = 1#new index for filtered dictionary
+        for i in pokeMoves_dict:
+            #print(pokeMoves_dict[move][1].title())
+            if pokeMoves_dict[i][2].title() in cat:
                 filtMoves_dict[f] = pokeMoves_dict[i][0]
                 f += 1
         while len(pokeMoves) != num:
