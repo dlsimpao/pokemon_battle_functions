@@ -4,6 +4,10 @@
 #2. Guided Pokemon party creator
 #3. Themed Party gen
 
+
+#Solutions
+#create a filter function that filters a dictionary based on restrictions
+
 import conventionalCode as cc
 import pkmnData as pd
 import PMonsterClass as pmc
@@ -27,7 +31,7 @@ def genPokeTeam(num):
         pokeTeam_list.append(pokeName_dict[ranVal])
     return pokeTeam_list
 
-#include category restriction?
+
 #function takes in number of pokeMoves, type and type category restrictions
 def genPokeMoves(num,typeList = [], cat = []):
     pokeMoves = []
