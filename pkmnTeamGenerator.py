@@ -6,7 +6,7 @@
 
 
 #Solutions
-#create a filter function that filters a dictionary based on restrictions
+
 
 import conventionalCode as cc
 import pkmnData as pd
@@ -50,10 +50,7 @@ def genPokeMoves(num,typeList = [], cat = []):
                and pokeMoves_dict[i][2].title() in cat:
                 filtMoves_dict[f] = pokeMoves_dict[i][0]
                 f += 1
-        while len(pokeMoves) != num:
-            ranVal = random.randint(1,len(filtMoves_dict))
-            if filtMoves_dict[ranVal] not in pokeMoves:
-                pokeMoves.append(filtMoves_dict[ranVal])
+        pokeMoves = createRandList(num, filtMoves_dict, unique = True)
     elif typeList != [] and cat == []: #if type restrictions apply
         typeList = [x.title() for x in typeList]
         f = 1#new index for filtered dictionary
@@ -62,10 +59,8 @@ def genPokeMoves(num,typeList = [], cat = []):
             if pokeMoves_dict[i][1].title() in typeList:
                 filtMoves_dict[f] = pokeMoves_dict[i][0]
                 f += 1
-        while len(pokeMoves) != num:
-            ranVal = random.randint(1,len(filtMoves_dict))
-            if filtMoves_dict[ranVal] not in pokeMoves:
-                pokeMoves.append(filtMoves_dict[ranVal])
+        pokeMoves = createRandList(num, filtMoves_dict, unique = True)
+
     elif typeList == [] and cat == []: #if category restrictions apply
         typeList = [x.title() for x in typeList]
         f = 1#new index for filtered dictionary
@@ -74,16 +69,28 @@ def genPokeMoves(num,typeList = [], cat = []):
             if pokeMoves_dict[i][2].title() in cat:
                 filtMoves_dict[f] = pokeMoves_dict[i][0]
                 f += 1
-        while len(pokeMoves) != num:
-            ranVal = random.randint(1,len(filtMoves_dict))
-            if filtMoves_dict[ranVal] not in pokeMoves:
-                pokeMoves.append(filtMoves_dict[ranVal])
-    else:     
-        while len(pokeMoves) != num:
-            ranVal = random.randint(1,len(pokeMoves_dict))
-            if pokeMoves_dict[ranVal] not in pokeMoves:
-                pokeMoves.append(pokeMoves_dict[ranVal][0])
+        pokeMoves = createRandList(num, filtMoves_dict, unique = True)
+    else:
+        pokeMoves = createRandList(num, pokeMoves_dict, unique = True)
+
     return pokeMoves
+
+#helps genPokeMoves()
+#creates a random unique list of size num from a dictionary with integers as its keys
+def createRandList(num, d, unique = True):
+    l = []
+    try:
+        while len(l) != num:
+            ranVal = random.randint(1,len(d))
+            if unique:
+                if d[ranVal] not in l:
+                    l.append(d[ranVal])
+            else:
+                l.append(d[ranVal])
+    except:
+        raise(ValueError)
+    return l
+
         
 
 ##moveList = genPokeMoves(4,["Electric"])
