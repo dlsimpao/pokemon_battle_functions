@@ -18,7 +18,7 @@ def main():
 ##        print(pkmnMoveType_dict[key])
     #moves = ptg.genPokeMoves(4,["normal","fire"],["Physical","Special"])
     #moves = ptg.genPokeMoves(4,["normal","fire"],["Status"])
-    moves = ptg.genPokeMoves(4,["normal","fire"])
+    moves = ptg.genPokeMoves(4,["water","fire"],["Physical"])
     moveEvals = getMoveEvals(moves,pkmnMoveType_dict,types_dict)
     printMoveEvals(moveEvals)
     
