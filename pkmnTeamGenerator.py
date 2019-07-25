@@ -5,6 +5,10 @@
 #3. Themed Party gen
 
 
+
+#working
+#1. creating random moves for each pokemon object
+#2. set moves, get moves
 #Solutions
 
 
@@ -14,44 +18,47 @@ import PMonsterClass as pmc
 import random
 
 class pkmnTeam():
-    pkmn_list = []
+    #dictionary with names as keys and objects as values
+    pkmn_dict = {}
+    pkmn_fieldStatus = ["In Battle","FNT"]
+
     def __init__(self, pkmn_list = []):
-        notRec = []
-        for i in pkmn_list:
-            if self.isValidName(i,"Pokemon"):
-                self.pkmn_list.append(i)
-            else:
-                notRec.append(i)
-        if notRec != []:
-            print("The Pokedex does not recognize the name/s: "+str(notRec))
+
+        self.setParty(pkmn_list)
         self.partyCount = len(pkmn_list)
 
+
+
     def addMember(self, pkmnToAdd):
+        pkmnToAdd = pkmnToAdd.title()
         if self.isValidName(pkmnToAdd):
             if self.partyCount < 6:
-                temp = 
-                self.pkmn_list.append(pkmnToAdd)
+                #uses Pokemon class and adds to the class team
+                obj = pmc.Pokemon(pkmnToAdd)
+                self.pkmn_dict[pkmnToAdd] = obj
                 self.partyCount += 1
             else:
-                self.printParty()
+                #self.printParty()
                 pkmnToSwap = input("Your party is full. Please select a Pokemon to swap.\n")
-                if pkmnToSwap in self.pkmn_list:
+                pkmnToSwap = pkmnToSwap.title()
+                if (pkmnToSwap in self.pkmn_dict) or (pkmnToSwap == pkmnToAdd):
                     self.swapMember(pkmnToAdd,pkmnToSwap)
                 else:
+                    print(pkmnToSwap+" is not found.")
                     self.addMember(pkmnToAdd)
         else:
-            self.printNotRec()
+            print("The Pokedex does not recognize this name.")
 
     def swapMember(self, pkmnIn, pkmnOut):
         if pkmnIn != pkmnOut:
-            self.pkmn_list.remove(pkmnOut)
+            for mon in self.pkmn_dict:
+                if mon == pkmnOut:
+                    self.pkmn_dict.pop(mon)
+                    break
             self.partyCount -= 1
             self.addMember(pkmnIn)
         else:
             print(pkmnIn.title()+" will not be added.")
-
-    def printNotRec(self):
-        print("The Pokedex does not recognize this name.")
         
         
     def isValidName(self, name, nameCategory = "Pokemon"):
@@ -60,24 +67,57 @@ class pkmnTeam():
         try:
             fHandle = pd.getFHandle(nameCategory)
         except:
-            raise(ValueError)
+            raise(NameError)
         pkmnNames = pd.autoDict(fHandle,index = False)
         if name in pkmnNames:
             valid = True
         return valid
+
+
+#Modify to get types from pokemon
+    def randomizeMoves(self,pkmnName):
+        for mon in self.pkmn_dict:
+            if mon == pkmnName:
+                self.pkmn_dict[mon].setMove(genPokeMoves(4,["Dragon"]))
+                break
+
+    def getMoves(self,pkmnName):
+        retList = []
+        for mon in self.pkmn_list:
+            if mon == pkmnName:
+                retList = mon.getMoves()
+                break
+        return retList
+                
             
-        pkmnName_list
     def randomizeParty(self,num):
-        self.pkmn_list = genPokeTeam(num)
+        self.setParty(genPokeTeam(num))
+
+    def setParty(self,party_list):
+        self.pkmn_list = []
+        notRec = []
+        if len(party_list) <= 6:
+            for mon in party_list:
+                if isValidName(mon, "Pokemon"):
+                    mon = mon.title()
+                    self.addMember(mon)
+                else:
+                    notRec.append(mon)
+            if notRec != []:
+                print("The Pokedex does not recognize the name/s: "+str(notRec))       
+        else:
+            print("You can only set a party of max 6 Pokemon")
 
     def getParty(self):
-        return self.pkmn_list
+        return self.pkmn_dict
 
     def printParty(self):
         party = self.getParty()
         for mon in party:
             print(mon)
 
+            
+#-------------------------------------------------------------------------------------
 #add restrictions like type, gen
 def genPokeTeam(num):
     pokeTeam_list = []
@@ -159,7 +199,14 @@ def createRandList(num, d, unique = True):
 
 ##alist = genPokeTeam(6)
 ##print(alist)
-Red = pkmnTeam(["Heatran","Gallade","Zigzagoon","Entei","Espeon","Rattata"])
-#Red.randomizeParty(6)
-Red.addMember("Charizard")
+pkmn_list = ["Heatran","Gallade","Zigzagoon","Entei","Espeon","Rattata"]
+Red = pkmnTeam()
+#Red.randomizeParty(6)  
+for pkmn in pkmn_list:
+    Red.addMember(pkmn)
 Red.printParty()
+cc.space(3)
+##Red.addMember("charizard")
+Red.randomizeMoves("Zigzagoon")
+
+
