@@ -39,11 +39,11 @@ def genPokeMoves(num,typeList = [], cat = []):
     
     fHandle = pd.getFHandle("Moves")
     pokeMoves_dict = pd.autoDict(fHandle,["Name","Type","Cat."],index = True)
-
+    f = 1#new index for filtered dictionary
+    
     #fills in the filtered dictionary based on restrictions given
     if typeList != [] and cat != []: #if type and category restrictions apply
         typeList = [x.title() for x in typeList]
-        f = 1#new index for filtered dictionary
         for i in pokeMoves_dict:
             #print(pokeMoves_dict[move][1].title())
             if pokeMoves_dict[i][1].title() in typeList\
@@ -53,7 +53,6 @@ def genPokeMoves(num,typeList = [], cat = []):
         pokeMoves = createRandList(num, filtMoves_dict, unique = True)
     elif typeList != [] and cat == []: #if type restrictions apply
         typeList = [x.title() for x in typeList]
-        f = 1#new index for filtered dictionary
         for i in pokeMoves_dict:
             #print(pokeMoves_dict[move][1].title())
             if pokeMoves_dict[i][1].title() in typeList:
@@ -63,7 +62,6 @@ def genPokeMoves(num,typeList = [], cat = []):
 
     elif typeList == [] and cat == []: #if category restrictions apply
         typeList = [x.title() for x in typeList]
-        f = 1#new index for filtered dictionary
         for i in pokeMoves_dict:
             #print(pokeMoves_dict[move][1].title())
             if pokeMoves_dict[i][2].title() in cat:
@@ -75,7 +73,7 @@ def genPokeMoves(num,typeList = [], cat = []):
 
     return pokeMoves
 
-#helps genPokeMoves()
+#genPokeMoves helper
 #creates a random unique list of size num from a dictionary with integers as its keys
 def createRandList(num, d, unique = True):
     l = []
@@ -90,6 +88,7 @@ def createRandList(num, d, unique = True):
     except:
         raise(ValueError)
     return l
+
 
         
 
