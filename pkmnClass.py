@@ -7,6 +7,7 @@
 #include catch rate probability?
 
 import pkmnData as pd
+import conventionalCode as cc
 
 class Pokemon:
     type1 = ""
@@ -62,7 +63,7 @@ class Pokemon:
     #checks if move is in movelist
     def checkMove(self,moveName):
         valid = False
-        if moveName.lower() in self.moves_dict:
+        if moveName.lower() in self.move_dict:
             valid = True
         return valid
     
@@ -95,9 +96,9 @@ class Pokemon:
             print("Please enter a valid move name.")
 
     #replaces a move
-    def replaceMove(self,move2Repl,moveName,moveType,effect,rawDmg,acc,pp):
-        self.delMove(move2Repl)
-        self.moves_dict[moveName] = [moveType,effect,rawDmg,acc,pp]
+    def replaceMove(self,moveOut,moveIn):
+        self.move_dict.pop(moveOut)
+        self.move_dict[moveIn] = self.pkmnMoves_dict[moveIn]
         
     #deletes known move
     def delMove(self,moveName):
@@ -165,15 +166,53 @@ class Pokemon:
         for stat in stats_dict:
             print("{:<10}{:<20}".format(stat,stats_dict[stat]))
 
+#maybe: actual movesets for Pokemon, but it requires large database
+#next step include pkmn name parameter
+def getAllMoves(moveTypes = []):
+    retDict = {}
 
+    for move in pd.pkmnMoveType_dict:
+        if pd.pkmnMoveType_dict[move] in moveTypes:
+            if pd.pkmnMoveType_dict[move] not in retDict:
+                retDict[pd.pkmnMoveType_dict[move]] = move
+            else:
+                oldMove = retDict.get(pd.pkmnMoveType_dict[move])
+                newMoves = [oldMove,move]
+                newMoves = cc.cascadeLists(newMoves)
+                retDict[pd.pkmnMoveType_dict[move]] = newMoves
+    return retDict
+
+#super ugly, but gets the printing right
+def printAllMoves(moveTypes = []):
+    moveTypes = [x.upper() for x in moveTypes]
+    helpStr = "{:<20}"*len(moveTypes)
+    prDict = getAllMoves(moveTypes)
+
+    valList = prDict.values()
+    #print(len(valList[0]),len(valList[1]))
+    valList = cc.sameMaxLen(valList)
     
+    print(valList)
+    
+    print(helpStr.format(*moveTypes))
+    print(helpStr.format(*prDict.values()))
+
+
+
+
+
 Char = Pokemon("Charmander")
 moveList = ["Growl","Scratch","Smokescreen","Ember"]
+
 for move in moveList:
     Char.setMove(move)
 
+printAllMoves(["Fire","Water"])
 
-##Char.setMove("Flamethrower","fire","physical",80,100,25)
+##for move in pd.pkmnMoveType_dict:
+##    print(pd.pkmnMoveType_dict[move])
+
+
 ##Char.printMoveAttr("growl")
 ##Char.setStats2(5,30,10,10,10,10,15)
 ##Char.influenceStat("HP",-15)
