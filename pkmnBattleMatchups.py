@@ -1,148 +1,107 @@
 #Pokemon Battle Simulation Test
 
-import PMonsterClass as pmc
-import TypeMatchups as tm
-import pkmnTeamGenerator as ptg
-import conventionalCode as cc
+#pkmnData has pkmnType_dict and pkmnMoveType_dict dictionaries
+import pkmnData as pd
+import conventionalCode as cc #
+import pkmnTeamGenerator as ptg #creates random team
+
+import PMonsterClass as pmc #
+import TypeMatchups as tm #
+
+
 
 def main():
-    #handle string containing Pokemon types from all nations
-    dataStr = "PGenAll170719.csv"
-    #national Pokemon Dictionary
+    #national Pokemon Dict
+    type_dict = pd.pkmnTypes_dict
     
-    natPokeType_dict = createTypeDict(dataStr)
 
     #max six Pokemon in a party
     num = 6
-##    myPokeParty = ptg.genPokeTeam(num)
-##    oppPokeParty = ptg.genPokeTeam(num)
+    myPokeParty = ptg.genPokeTeam(num)
+    oppPokeParty = ptg.genPokeTeam(num)
 
-    myPokeParty = ["Hitmonlee","Primeape","Articuno","Elgyem","Rowlet","Gastrodon"]
-    oppPokeParty = ["Weavile","Sneasel","Krabby","Starly","Leafeon","Basculin"]
+    #myPokeParty = createTeam(["Hitmonlee","Primeape","Articuno","Elgyem","Rowlet","Gastrodon"])
+    #oppPokeParty = createTeam(["Weavile","Sneasel","Krabby","Starly","Leafeon","Basculin"])
 
-    #printParty(myPokeParty,natPokeType_dict)
     #stores the optimal party setup, assuming no switches and advantage based solely on type
 
     #Mine
-    myOptParty = optimizeParty(myPokeParty,oppPokeParty,natPokeType_dict)
-    strongOpp = identifyStrongOpp(myOptParty, oppPokeParty)
+    myOptParty = optimizeParty(myPokeParty,oppPokeParty)
+    oppStrong = getStrongOpp(myOptParty, oppPokeParty)
+
 
     #Opp
-    oppOptParty = optimizeParty(oppPokeParty, myPokeParty,natPokeType_dict)
-    strongMine = identifyStrongOpp(oppOptParty, myPokeParty)
+    oppOptParty = optimizeParty(oppPokeParty, myPokeParty)
+    myStrong = getStrongOpp(oppOptParty, myPokeParty)
 
-    printParty(myPokeParty,natPokeType_dict)
+
+    printParty(myPokeParty,"Penguin's Team")
     cc.space(2)
-    printParty(oppPokeParty,natPokeType_dict)
+    printParty(oppPokeParty,"Evil Ostrich's Team")
     cc.space(2)
-    printFavorMatch(myOptParty, strongMine)
+    printFavorMatch(myOptParty, myStrong)
     cc.space(2)
-    printAvoidMatch(oppOptParty)
+    printAvoidMatch(oppOptParty, oppStrong)
 
     
-    
 
+#creates roster of proper names
+def createTeam(l):
+    l = [x.title() for x in l]
+    return l
 
-#opens Pokemon Database
-def createTypeDict(handleStr):
-    pokeType_dict = {}
-    fHandle = open("PGenAll170719.csv")
-    header = fHandle.readline()
-    header = cc.strNspl(header)
-    for line in fHandle:
-        line = cc.strNspl(line)
-        pokeType_dict[line[0]] = [line[1],line[2]]
-    return pokeType_dict
+#creates a sub type dict specifically for the team
+def createTeamTypesDict(party):
+    ret_dict = {}
+    for mon in party:
+        ret_dict[mon] = pd.pkmnTypes_dict[mon]
+    return ret_dict
 
-#gets Pokemon's type based on name
-def getType(pokeName, type_dict):
-    return type_dict[pokeName]
-
-def printParty(party_list,type_dict):
-    for mon in party_list:
-        types_list = getType(mon,type_dict)
-        if len(types_list) == 1:
-            types_str = str(types_list)
-        else:
-            types_str = str(types_list[0])+" "+str(types_list[1])
-        print(mon+": "+types_str)
+#create custom dictionary for team
+def createTeamMatchupDict(party_dict):
+    ret_dict = {}
+    for mon in party_dict:
+            ret_dict[mon] = tm.getEffectMatch(party_dict[mon])
+    return ret_dict
 
 #Given I know opponent's lineup, I optimize my party's order (based on type, not move types)
-def optimizeParty(party_list,opp_list,type_dict):
-    myTypes_dict = {}
-    oppTypes_dict = {}
-    oppTypesMatchup = {}
-    #dictionary for my best line up based on order and pokemon type
-    myOptLineUp = {}
+def optimizeParty(myRoster,oppRoster):
+    myOptTeam = {}
     
-    for mon in party_list:
-        myTypes_dict[mon] = getType(mon,type_dict)
-    #print("My Pokemon: "+str(myTypes_dict))
-    for mon in opp_list:
-        oppTypes_dict[mon] = getType(mon,type_dict)
-    #cc.space(3)
-    #print("Opposing Pokemon: "+str(oppTypes_dict))
+    myTypes_dict = createTeamTypesDict(myRoster)
+    oppTypes_dict = createTeamTypesDict(oppRoster)
 
-    #for each pokemon in opponents party, find their matchup effectiveness
-    for mon in oppTypes_dict:
-        immuneAgainst, superResistantAgainst, resistantAgainst, weakAgainst,superWeakAgainst = tm.getEffectMatch(oppTypes_dict[mon])
-        effect_list = cc.capLists([immuneAgainst, superResistantAgainst, resistantAgainst, weakAgainst,superWeakAgainst])
-        oppTypesMatchup[mon] = effect_list
-    #cc.space(3)
-    
-    #print(oppTypesMatchup) #test
-    #cc.space(3)
-    #print(oppTypesMatchup["Sneasel"][4])
-    #given each opposing pokemon's weakness, arrange my party strategically
-    #for each pokemon in opponent's party
-    for oppMon in oppTypesMatchup:
-        #for each type the opponent is weak
-        for oppTypes in oppTypesMatchup[oppMon][4]:
-            #for each pokemon in my party
-            for myMon in myTypes_dict:   
-                #if the opponent is weak against a type of Pokemon (based purely on type)
-                if oppTypes in myTypes_dict[myMon]:
-                    if myMon not in myOptLineUp:
-                        myOptLineUp[myMon] = oppMon
-                    else:
-                        #resets lists
-                        oppList = [myOptLineUp.get(myMon)]
-                        oppList = cc.rec_cascadeLists(oppList)
-                        if oppMon not in oppList:
-                            oppList += [oppMon]
-    
-                        #adds to dictionary
-                        myOptLineUp[myMon] = oppList
-        for oppTypes in oppTypesMatchup[oppMon][3]:
-            #for each pokemon in my party
-            for myMon in myTypes_dict:   
-                if oppTypes in myTypes_dict[myMon]:
-                    if myMon not in myOptLineUp:
-                        myOptLineUp[myMon] = oppMon
-                    else:
-                        #resets lists
-                        oppList2 = []
-##                        if isinstance(myOptLineUp.get(myMon),list):
-##                            oppList2 = myOptLineUp.get(myMon)
-##                        else:
-##                            oppList2.append(myOptLineUp.get(myMon))
-                        #adds new info
-                        #resets lists
-                        oppList2 = [myOptLineUp.get(myMon)]
-                        oppList2 = cc.rec_cascadeLists(oppList2)
-                        if oppMon not in oppList2:
-                            oppList2 += [oppMon]
-                        #adds to dictionary
-                        myOptLineUp[myMon] = oppList2
-    print(myOptLineUp)#does not work
-    cc.space(3)
-    return myOptLineUp
-    #NEXT: normal opposition, matchups to avoid
-    #NEXT: get and print functions
+    #key = pkmn, value = tuples of (immuneAgainst, superResistantAgainst, resistantAgainst, weakAgainst,superWeakAgainst)
+    myMatchup_dict = createTeamMatchupDict(myTypes_dict)
+    oppMatchup_dict = createTeamMatchupDict(oppTypes_dict)
+
+    for mon in myTypes_dict:
+        for opp in oppMatchup_dict:
+            if cc.haveCommon([[*myTypes_dict[mon]],*oppMatchup_dict[opp][3:]]):
+                if mon not in myOptTeam:
+                    myOptTeam[mon] = opp
+                elif opp not in myOptTeam[mon]:
+                    oldOpp = myOptTeam.get(mon)
+                    newOpp = cc.cascadeTuples((oldOpp,opp))
+                    myOptTeam[mon] = newOpp
+    return myOptTeam
+
+#prints party
+def printParty(party,header = ""):
+    if header != "":
+        print(header)
+    types_dict = createTeamTypesDict(party)
+    for mon in types_dict:
+        if types_dict[mon][1] == "":
+            print(mon+": "+str(types_dict[mon][0]))
+        else:
+            print(mon+": "+str(types_dict[mon][0]+" "+str(types_dict[mon][1])))
+
+#NEXT: get and print functions
 
 #identifies which opposing Pokemon will go evenly or better than mine
 #given my optimal lineup dictionary and opponents' list
-def identifyStrongOpp(myOpt_dict, oppList):
+def getStrongOpp(myOpt_dict, oppList):
     retList = oppList
     #for each opposing pokemon
     for oppMon in oppList:
@@ -156,17 +115,23 @@ def identifyStrongOpp(myOpt_dict, oppList):
     retList = cc.retNonBlanks(retList)
     return retList
 
+def printStrongOpp(opt_dict, oppList):
+    ret_list = getStrongOpp(opt_dict, oppList)
+    for mon in ret_list:
+        print(mon)
+
 #prints desired matchups
 def printFavorMatch(myOpt_dict, strongPoke):
     for mon in myOpt_dict:
-        print("My "+mon+": Use against:"+str(myOpt_dict[mon]))
-    print("Opposing team has no type counter for"+str(strongPoke))
+        print("My "+mon+": Use against "+str(myOpt_dict[mon]))
+    print("Opposing team has no type counter for "+str(strongPoke))
 
 
 #prints unwanted matchups
-def printAvoidMatch(oppOpt_dict):
+def printAvoidMatch(oppOpt_dict, strongPoke):
     for mon in oppOpt_dict:
-        print("Opposing "+mon+": Do not use "+str(oppOpt_dict[mon]))
+        print("Opposing "+mon+": Do not use " +str(oppOpt_dict[mon]))
+    print("My team has no type counter for "+str(strongPoke))
 
 
 
