@@ -77,7 +77,6 @@ class Pokemon:
         return retList
 
     def setMove(self,moveName):
-        moveName = moveName.title()
         try:
             if self.moveCount < 4:
                 self.move_dict[moveName] = self.pkmnMoves_dict[moveName]
