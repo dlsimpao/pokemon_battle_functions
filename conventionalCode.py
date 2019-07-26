@@ -1,5 +1,19 @@
 #Conventional user-defined functions
 
+#---------------------------------------Misc
+#adds a newline for printing
+def space(num):
+    print("\n"*num)
+
+
+#------------------------------------------error message
+class CustomError(Exception):
+    pass
+
+
+
+
+#-------------------------------------------file functions
 #strips newline and splits at ','
 def strNspl(line,strp = "\n",splt = ","):
     line = line.strip(strp)
@@ -23,9 +37,43 @@ def isSuperEmpty(string):
         superEmpty = True
     return superEmpty
 
-#adds a newline for printing
-def space(num):
-    print("\n"*num)
+
+
+#----------------------------------List functions
+def hasDuplicate(alist):
+    dup = False
+    for a in alist:
+        count = alist.count(a)
+        if count > 1:
+            dup = True
+            break
+    return dup
+        
+#test
+##alist = [1,2,3,4,1]
+##print(hasDuplicate(alist))
+
+#searches if there's a common element from a list of lists
+#assume that the elements in each list are unique
+def haveCommon(listOLists):
+    common = False
+    allList = [*listOLists]
+    allElements = []
+    for l in allList:
+        if hasDuplicate(l):
+            raise ValueError("List contains non-unique elements.")
+        else:
+            allElements.extend([*l])
+    if hasDuplicate(allElements):
+        common = True
+    return common
+
+
+#test
+##alist = [1,2,3,4,5]
+##blist = [9,8,7,6,]
+##clist = [12,13,14,15,5]
+##print(haveCommon([alist,blist,clist]))
 
 #returns all non-blank in list
 def retNonBlanks(alist,blank = ""):
@@ -38,6 +86,20 @@ def retNonBlanks(alist,blank = ""):
 ##a = [1,2,3,"",4,5,""," "]
 ##b = retNonBlanks(a,"")
 ##print(b)
+
+
+def hasDuplicate(alist):
+    dup = False
+    for a in alist:
+        count = alist.count(a)
+        if count > 1:
+            dup = True
+            break
+    return dup
+        
+#test
+##alist = [1,2,3,4,1]
+##print(hasDuplicate(alist))
 
 
 #function takes a list of sublists of strings and sets the proper case for each string in the sublist
@@ -78,6 +140,8 @@ def rec_cascadeLists(listOfLists):
 
 #print(rec_cascadeLists([1,2,3,[4,5,[6]]]))
 
+#---------------------------------------------tuples
+    
 #function turns tuples of tuples into a single tuple
 def cascadeTuples(tupOfTups):
     retTup = ()
@@ -100,6 +164,8 @@ def rec_cascadeTuples(tupOfTups):
 
 #print(rec_cascadeTuples((1,((2,3),4,(5,6,(7))))))
 
+
+#-------------------------------------------------printing data
 #prints relative counts
 def printRel(count_dict):
     total = sum(count_dict.values())
