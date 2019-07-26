@@ -6,14 +6,12 @@ import pkmnData as pd
 
 
 def main():
-    type_list = ["normal","fighting","flying","poison","ground","rock","bug","ghost","steel",\
-                 "fire","water","grass","electric","psychic","ice","dragon","dark","fairy"]
-    
+    type_list = pd.types_list 
     #Asks user for types and stores in choice list
     choice_list = askForTypes(type_list)
 
     #formats choice list into 
-    choice_list = [type1.lower() for type1 in choice_list]
+    choice_list = [type1.title() for type1 in choice_list]
 
     #checks if user wants 
     ans2 = choiceCheck1(choice_list)
@@ -50,7 +48,7 @@ def askForTypes(type_list):
 def isValidType(type1,typeList):
     valid = False
     try:
-        type1 = type1.lower()
+        type1 = type1.title()
         if type1 in typeList:
             valid = True      
     except:
@@ -76,12 +74,13 @@ def isValidType(type1,typeList):
 ##                type2.lower()
 ##            valid = True
 
+
 def getMoveTypeEffects(type_num, types_dict):
     noEffectAgainst = []
     notVeryEffectiveAgainst = []
     effectiveAgainst = []
 
-    type_num = type_num.lower()
+    type_num = type_num.title()
     
     for key in types_dict[type_num]:
         if types_dict[type_num][key] == 0:
@@ -140,9 +139,10 @@ def printMatchupReport(choice_list):
 
 #retuns lists of the chosen types' varying matchups
 def getEffectMatch(choice_list):
-    choice_list = [x.lower() for x in choice_list]
+    choice_list = [x.title() for x in choice_list]
     
-    types_dict = pd.getTypes_dict
+    types_dict = pd.typesMatchup_dict
+    
     
     #for dual types
     superResistantAgainst = []
@@ -156,7 +156,7 @@ def getEffectMatch(choice_list):
     
     if len(choice_list) == 1:
         type1 = choice_list[0]
-        for key in types_dict:
+        for key in pd.typesMatchup_dict:
             try:
                 if types_dict[key][type1] == 0:
                     immuneAgainst.append(key)
@@ -190,9 +190,10 @@ def getEffectMatch(choice_list):
 def printEffectReport(choice_list): 
 
     #dictionary of all type effects
-    types_dict = pd.getTypes_dict()
+    types_dict = pd.typesMatchup_dict
     #prints reports depending on single and dual type
     #---------------------------------------separate the print reports
+
     if len(choice_list) == 2:
         type1, type2 = choice_list[0],choice_list[1]
         printMoveTypeReport(type1,types_dict)

@@ -6,56 +6,42 @@
 #add damage variations (multi hits, low kick based on weight, seismic toss based on level)
 #include catch rate probability?
 
+import pkmnData as pd
+import conventionalCode as cc
 
-
-
-#-----------------------------------------------modify to find type/s given just the name (need database)
 class Pokemon:
     type1 = ""
     type2 = ""
 
-    #may consider adding Nature effects later -- a bit complex
+    #may consider adding Nature effects later -- a bit complex, not used yet
     nature = ""
 
     #max out moveCount at 4
     moveCount = 0
-    
-    #dictionary of moves and its attributes
-    moves_dict = {}
-
-    #dictionary of base stats with minimum default values
-    baseStats_dict = {"Level":5,"HP":1,"ATK":0,"DEF":1,"SP.ATK":0,"SP.DEF":1,"SPD":1}
 
     #list of statuses: burn, frozen, paralyzed, poison, badly poisoned, sleep, fainted, confused, infatuated
-    status_list = ["","BRN","FRZ","PAR","PSN","BPSN","SLP","FNT","CNF","IFT"]
+    status_list = ["Healthy","BRN","FRZ","PAR","PSN","BPSN","SLP","FNT","CNF","IFT"]
 
-    #valid types
-    types_dict = {"normal":{"rock":0.5, "ghost":0, "steel":0.5},\
-                        "fighting":{"normal":2, "flying":0.5, "poison":0.5,"rock":2,"bug":0.5,"ghost":0,"steel":2,"psychic":0.5,"ice":2,"dark":2,"fairy":0.5},\
-                        "flying":{"fighting":2, "rock":0.5, "bug":2,"steel":0.5, "grass":2, "electric":0.5},\
-                        "poison":{"poison":0.5,"ground":0.5, "rock":0.5, "ghost":0.5,"steel":0,"grass":2,"fairy":2},\
-                        "ground":{"flying":0, "poison":2,"rock":2,"bug":0.5,"steel":2,"fire":2,"grass":0.5,"electric":2},\
-                        "rock":{"fighting":0.5,"flying":2,"ground":0.5,"bug":2,"steel":0.5,"fire":2,"ice":2},\
-                        "bug":{"fighting":0.5,"flying":0.5,"poison":0.5,"ghost":0.5,"steel":0.5,"fire":0.5,"grass":2,"psychic":2,"dark":2,"fairy":0.5},\
-                        "ghost":{"normal":0,"ghost":2,"psychic":2,"dark":0.5},\
-                        "steel":{"rock":2,"steel":0.5,"fire":0.5,"water":0.5,"electric":0.5,"ice":2,"fairy":2},\
-                        "fire":{"rock":0.5,"bug":2,"steel":2,"fire":0.5,"water":0.5,"grass":2,"ice":2,"dragon":0.5},\
-                        "water":{"ground":2,"rock":2,"fire":2,"water":0.5,"grass":0.5,"dragon":0.5},\
-                        "grass":{"flying":0.5,"poison":0.5,"ground":2,"rock":2,"bug":0.5,"steel":0.5,"fire":0.5,"water":2,"grass":0.5,"dragon":0.5},\
-                        "electric":{"flying":2,"ground":0,"water":2,"grass":0.5,"electric":0.5,"dragon":0.5},\
-                        "psychic":{"fighting":2,"poison":2,"steel":0.5,"psychic":0.5,"dark":0},\
-                        "ice":{"flying":2,"ground":2,"steel":0.5,"fire":0.5,"water":0.5,"grass":2,"ice":0.5,"dragon":2},\
-                        "dragon":{"steel":0.5,"dragon":2,"fairy":0},\
-                        "dark":{"fighting":0.5,"ghost":2,"psychic":2,"dark":0.5,"fairy":0.5},\
-                        "fairy":{"fighting":2,"poison":0.5,"steel":0.5,"fire":0.5,"dragon":2,"dark":2}}
+    #gets valid names and types from Pokemon data
+    fHandle = pd.getFHandle("Pokemon")
+    pkmnTypes_dict = pd.autoDict(fHandle,index = False)
+
+    #gets valid moves
+    fHandle2 = pd.getFHandle("Moves")
+    moveAttrLabels = ["Name","Type","Cat.","Power","Acc.","PP"]
+    pkmnMoves_dict = pd.autoDict(fHandle2,moveAttrLabels,index = False)
     
-    def __init__(self,name,type1,type2 = ""):
-        self.name = name
-        if isValidType(type1,self.types_dict):
-            self.type1 = type1
-        if type2 == "" or isValidType(type2,self.types_dict):
-            self.type2 = type2
-
+    def __init__(self,name):
+        try:
+            self.name = name
+            self.type1, self.type2 = self.pkmnTypes_dict[name][0],self.pkmnTypes_dict[name][1]
+        except:
+            print("Please enter a valid Pokemon name")
+        else:
+            self.move_dict = {}
+            self.status = "Healthy"
+            self.baseStats_dict = {"Level":5,"HP":1,"ATK":0,"DEF":1,"SP.ATK":0,"SP.DEF":1,"SPD":1}
+            
     def __str__(self): #creates a string representation of itself
         identity = "Pokemon"
         moves = "Moveset:"
@@ -64,54 +50,55 @@ class Pokemon:
         else:
             identity = self.name+" is a "+self.type1+"-"+self.type2+" dual-type Pokemon."
 
-        for move in self.moves_dict:
+        for move in self.move_dict:
             moves += "\n"+move.title()
-        return identity +"\n"+moves
+        return identity +"\n"+ moves
 
-    #----------------------------------------------------------considers all strategies and chooses best one according to damage output
-    #def findBestMove(self, dmg, acc):
+    def getName(self):
+        return self.name
 
-##    #same type attack bonus
-##    def STAB(self, moveType):
-##        stabValid = False
-##        if self.type1 or self.type2 == moveType:
-##            stabValid = True
-##        return stabValid
+    def getTypes(self):
+        return [self.type1, self.type2]
 
     #checks if move is in movelist
     def checkMove(self,moveName):
         valid = False
-        if moveName.lower() in self.moves_dict:
+        if moveName.lower() in self.move_dict:
             valid = True
         return valid
     
-    #setMove - moveName, moveType, effect (physical, special), raw damage (w/o considering other conditions), accuracy, power points
+    def printMoveDict(self):
+        for key in self.pkmnMoves_dict:
+            print(key)
 
-    def setMove(self,moveName,moveType,effect,rawDmg,acc, pp):
-        #local var: move_attributes
-        move_attributes = []
-        if self.moveCount < 4:
-            if effect.lower() == "special":
-                rawDmg = 0
-            move_attributes += [moveType,effect,rawDmg,acc,pp]
-            self.moves_dict[moveName.lower()] = move_attributes
-            self.moveCount += 1
-        else:
-            ans = input(self.name+" currently has four moves. Would you like to replace a move? Yes|No\n")
-            if ans.lower() == "no":
-                pass
-            elif ans.lower() == "yes":                
-                for move in self.moves_dict:
-                    print(move.title())
-                move2Replace = input()
-                self.replaceMove(move2Replace,moveName,moveType,effect,rawDmg,acc,pp)
+    def getMoves(self):
+        retList = []
+        for move in self.move_dict:
+            retList.append(move)
+        return retList
+
+    def setMove(self,moveName):
+        try:
+            if self.moveCount < 4:
+                self.move_dict[moveName] = self.pkmnMoves_dict[moveName]
+
+                self.moveCount += 1
             else:
-                print("Please enter a valid answer.")
+                for move in self.move_dict:
+                    print(move)
+                ans = input(self.name+" currently has four moves. Select a move to replace:n")
+                if ans != moveName:
+                    self.move_dict.pop(ans)
+                    self.move_dict[moveName] = self.pkmnMoves_dict[moveName]
+                else:
+                    print(str(ans.title())+" will not be learned.")
+        except:
+            print("Please enter a valid move name.")
 
     #replaces a move
-    def replaceMove(self,move2Repl,moveName,moveType,effect,rawDmg,acc,pp):
-        self.delMove(move2Repl)
-        self.moves_dict[moveName] = [moveType,effect,rawDmg,acc,pp]
+    def replaceMove(self,moveOut,moveIn):
+        self.move_dict.pop(moveOut)
+        self.move_dict[moveIn] = self.pkmnMoves_dict[moveIn]
         
     #deletes known move
     def delMove(self,moveName):
@@ -120,26 +107,21 @@ class Pokemon:
         else:
             print(self.name +" doesn't know the move "+ moveName +"!")
 
-    #gets move attributes info
+    #returns move attribute dict
     def getMoveAttr(self,moveName):
-        if self.checkMove(moveName):
-            moveType = self.moves_dict[moveName][0]
-            effect = self.moves_dict[moveName][1]
-            damage = str(self.moves_dict[moveName][2])
-            accuracy = str(self.moves_dict[moveName][3])
-            powerPoints = str(self.moves_dict[moveName][4])
-
-            return moveType,effect,damage,accuracy,powerPoints
+        i = 1
+        attr_dict = {}
+        for moveAttr in self.pkmnMoves_dict[moveName]:
+            attr_dict[self.moveAttrLabels[i]] = moveAttr
+            i += 1
+        return attr_dict
 
     #prints move attributes
     def printMoveAttr(self,moveName):
-        if self.checkMove(moveName):
-            moveType,effect,damage,accuracy,pp = self.getMoveAttr(moveName)
-            print("-----"+moveName.title()+"-----\nType: "+moveType+\
-                  "\nEffect: "+effect+\
-                  "\nDamage: "+damage+\
-                  "\nAccuracy: "+accuracy+\
-                  "\nPP:"+pp)
+        attr_dict = self.getMoveAttr(moveName)
+        print(moveName.title())
+        for attr in attr_dict:
+            print("{:<10}{:<20}".format(attr,attr_dict[attr]))
             
 #  baseStats_dict = {"Level":5,"HP":1,"ATK":0,"DEF":1,"SP.ATK":0,"SP.DEF":1,"SPD":1}
 
@@ -154,7 +136,7 @@ class Pokemon:
         self.baseStats_dict["SPD"] = input("Speed: ")
 
     #sets stats
-    def setStats2(self, lvl,hp,atk,dfn,sp_atk,sp_def,spd):
+    def setStats2(self,lvl,hp,atk,dfn,sp_atk,sp_def,spd):
         self.baseStats_dict["Level"] = lvl
         self.baseStats_dict["HP"] = hp
         self.baseStats_dict["ATK"] = atk
@@ -162,7 +144,8 @@ class Pokemon:
         self.baseStats_dict["SP.ATK"] = sp_atk
         self.baseStats_dict["SP.DEF"] = sp_def
         self.baseStats_dict["SPD"] = spd
-
+        
+    #may need to change later, but works fine logically
     #gameplay influencing stats, changes a specific stats by a certain amount
     #value > 0 for positive changes
     #value < 0 for negative changes
@@ -175,64 +158,65 @@ class Pokemon:
         
     #returns stats
     def getStats(self):
-        lvl = self.baseStats_dict["Level"]
-        HP = self.baseStats_dict["HP"]
-        attack = self.baseStats_dict["ATK"]
-        defense = self.baseStats_dict["DEF"]
-        sp_attack = self.baseStats_dict["SP.ATK"]
-        sp_defense = self.baseStats_dict["SP.DEF"]
-        speed = self.baseStats_dict["SPD"]
-        return lvl, HP, attack, defense, sp_attack, sp_defense, speed
+        return self.baseStats_dict
 
     #prints stats
     def printStats(self):
-        lvl, hp, att, defense, spAtt,spDef, spd = self.getStats()
-        print("Level:",lvl,\
-              "\nHP:",hp,\
-              "\nATK:",att,\
-              "\nDEF:",defense,\
-              "\nSP.ATK:",spAtt,\
-              "\nSP.DEF:",spDef,\
-              "\nSPD:",spd)
+        stats_dict = self.getStats()
+        for stat in stats_dict:
+            print("{:<10}{:<20}".format(stat,stats_dict[stat]))
 
+#maybe: actual movesets for Pokemon, but it requires large database
+#next step include pkmn name parameter
+def getAllMoves(moveTypes = []):
+    retDict = {}
 
-    #prints attributes a specific move
-##    def printMoveAttr(self,moveName):
-##        if self.checkMove(moveName):
-##
-##            print("-----"+moveName.title()+"-----\nType: "+self.moves_dict[moveName][0]+\
-##                  "\nEffect: "+self.moves_dict[moveName][1]+\
-##                  "\nDamage: "+str(self.moves_dict[moveName][2])+\
-##                  "\nAccuracy: "+str(self.moves_dict[moveName][3]))
-
-#checks if valid type
-def isValidType(type1,types_dict):
-        valid = False
-        try:
-            type1 = type1.lower()
-            if type1 in types_dict:
-                valid = True      
-        except:
-            raise ValueError
-        else:
-            if type1 not in types_dict:
-                print("Please enter valid types from this list:\n")
-                for key in types_dict:
-                    print(key)
-                #main() ------------------------------------------add main() later
+    for move in pd.pkmnMoveType_dict:
+        if pd.pkmnMoveType_dict[move] in moveTypes:
+            if pd.pkmnMoveType_dict[move] not in retDict:
+                retDict[pd.pkmnMoveType_dict[move]] = move
             else:
-                pass
-        return valid
+                oldMove = retDict.get(pd.pkmnMoveType_dict[move])
+                newMoves = [oldMove,move]
+                newMoves = cc.cascadeLists(newMoves)
+                retDict[pd.pkmnMoveType_dict[move]] = newMoves
+    return retDict
 
+#super ugly, but gets the printing right
+def printAllMoves(moveTypes = []):
+    moveTypes = [x.upper() for x in moveTypes]
+    helpStr = "{:<20}"*len(moveTypes)
+    prDict = getAllMoves(moveTypes)
+
+    valList = prDict.values()
+    #print(len(valList[0]),len(valList[1]))
+    valList = cc.sameMaxLen(valList)
     
-Char = Pokemon("Charmander","fire")
-Char.setMove("Growl","normal","special",0,100,30)
-Char.setMove("Scratch","normal","physical",10,100,45)
-Char.setMove("Smokescreen","normal","special",0,100,25)
-Char.setMove("Ember","fire","physical",30,100,35)
-#Char.setMove("Flamethrower","fire","physical",80,100,25)
-#Char.printMoveAttr("growl")
-Char.setStats2(5,30,10,10,10,10,15)
-Char.influenceStat("HP",-15)
-Kip = Pokemon("Mudkip","water","ground")
+    print(valList)
+    
+    print(helpStr.format(*moveTypes))
+    print(helpStr.format(*prDict.values()))
+
+
+
+
+
+Char = Pokemon("Charmander")
+moveList = ["Growl","Scratch","Smokescreen","Ember"]
+
+for move in moveList:
+    Char.setMove(move)
+
+printAllMoves(["Fire","Water"])
+
+##for move in pd.pkmnMoveType_dict:
+##    print(pd.pkmnMoveType_dict[move])
+
+
+##Char.printMoveAttr("growl")
+##Char.setStats2(5,30,10,10,10,10,15)
+##Char.influenceStat("HP",-15)
+##Kip = Pokemon("Swampert")
+##Kip.setMove("Water Gun")
+##Kip.printMoveAttr("Water Gun")
 
