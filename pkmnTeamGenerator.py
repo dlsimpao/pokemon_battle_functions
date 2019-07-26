@@ -19,11 +19,10 @@ import random
 
 class pkmnTeam():
     #dictionary with names as keys and objects as values
-    pkmn_dict = {}
     pkmn_fieldStatus = ["In Battle","FNT"]
 
     def __init__(self, pkmn_list = []):
-
+        self.pkmn_dict = {}
         self.setParty(pkmn_list)
         self.partyCount = len(pkmn_list)
 
@@ -75,7 +74,7 @@ class pkmnTeam():
 
 
 #Modify to get types from pokemon
-    def randomizeMoves(self,pkmnName):
+    def randomizeMovesFor(self,pkmnName):
         moves = genPokeMoves(4,["Dragon"])
         for mon in self.pkmn_dict:
             if mon == pkmnName:
@@ -84,19 +83,12 @@ class pkmnTeam():
                 break
 
     def getMoves(self,pkmnName):
-        retList = []
-        for mon in self.pkmn_list:
-            if mon == pkmnName:
-                retList = mon.getMoves()
-                break
-        return retList
+        return self.pkmn_dict[pkmnName].getMoves()
 
     def printMoves(self,pkmnName):
-        for mon in self.pkmn_list:
-            if mon == pkmnName:
-                moveList = self.getMoves(pkmnName)
-                for move in moveList:
-                    print(move)
+        moves = self.getMoves(pkmnName)
+        for move in moves:
+            print(move)
             
     def randomizeParty(self,num):
         self.setParty(genPokeTeam(num))
@@ -120,8 +112,7 @@ class pkmnTeam():
         return self.pkmn_dict
 
     def printParty(self):
-        party = self.getParty()
-        for mon in party:
+        for mon in self.pkmn_dict:
             print(mon)
 
             
@@ -201,24 +192,25 @@ def createRandList(num, d, unique = True):
 
         
 
-##moveList = genPokeMoves(4,["Electric"])
-##print(moveList)
 
 
-##alist = genPokeTeam(6)
-##print(alist)
-pkmn_list = ["Heatran","Gallade","Zigzagoon","Entei","Espeon","Rattata"]
-Red = pkmnTeam()
-#Red.randomizeParty(6)  
-for pkmn in pkmn_list:
-    Red.addMember(pkmn)
-Red.printParty()
-cc.space(3)
-##Red.addMember("charizard")
-Red.randomizeMoves("Zigzagoon")
+def main():
+    ##moveList = genPokeMoves(4,["Electric"])
+    ##print(moveList)
+    ##alist = genPokeTeam(6)
+    ##print(alist)
+    pkmn_list = ["Heatran","Gallade","Zigzagoon","Entei","Espeon","Rattata"]
+    Red = pkmnTeam()
+    #Red.randomizeParty(6)  
+    for pkmn in pkmn_list:
+        Red.addMember(pkmn)
+    Red.printParty()
+    cc.space(3)
+    ##Red.addMember("charizard")
+    Red.randomizeMovesFor("Zigzagoon")
+    #print(genPokeMoves(4,["Fire"]))
+    Red.printMoves("Zigzagoon")
 
-#print(genPokeMoves(4,["Fire"]))
-Red.printMoves("Zigzagoon")
 
 
 
