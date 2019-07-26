@@ -76,9 +76,11 @@ class pkmnTeam():
 
 #Modify to get types from pokemon
     def randomizeMoves(self,pkmnName):
+        moves = genPokeMoves(4,["Dragon"])
         for mon in self.pkmn_dict:
             if mon == pkmnName:
-                self.pkmn_dict[mon].setMove(genPokeMoves(4,["Dragon"]))
+                for move in moves:
+                    self.pkmn_dict[mon].setMove(move)
                 break
 
     def getMoves(self,pkmnName):
@@ -88,7 +90,13 @@ class pkmnTeam():
                 retList = mon.getMoves()
                 break
         return retList
-                
+
+    def printMoves(self,pkmnName):
+        for mon in self.pkmn_list:
+            if mon == pkmnName:
+                moveList = self.getMoves(pkmnName)
+                for move in moveList:
+                    print(move)
             
     def randomizeParty(self,num):
         self.setParty(genPokeTeam(num))
@@ -208,5 +216,10 @@ Red.printParty()
 cc.space(3)
 ##Red.addMember("charizard")
 Red.randomizeMoves("Zigzagoon")
+
+#print(genPokeMoves(4,["Fire"]))
+Red.printMoves("Zigzagoon")
+
+
 
 
