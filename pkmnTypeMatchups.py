@@ -80,16 +80,18 @@ def getMoveTypeEffects(type_name, types_dict):
     notVeryEffectiveAgainst = []
     effectiveAgainst = []
 
-    case = cc.getCase(list(types_dict.values)[0])
+
+    case = cc.getCase(list(types_dict.values())[0])
+
     if case == "title":
         type_name = type_name.title()
     elif case == "lower":
-        type_name = type_name.title()
+        type_name = type_name.lower()
     else:
-        type_name = type_name.title()
+        type_name = type_name.upper()
         
     for key in types_dict[type_name]:
-        if types_dict[type_num][key] == 0:
+        if types_dict[type_name][key] == 0:
             noEffectAgainst.append(key)
         elif types_dict[type_name][key] == 0.5:
             notVeryEffectiveAgainst.append(key)
