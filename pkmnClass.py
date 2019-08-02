@@ -167,48 +167,7 @@ class Pokemon:
         stats_dict = self.getStats()
         for stat in stats_dict:
             print("{:<10}{:<20}".format(stat,stats_dict[stat]))
-
-
-
-#modify to go beyond two types
-def printAllMoves(moveTypes = []):
-    i = 0
-
-    #string to print
-    prStr = ""
-
-    #list with all caps types
-    moveTypes = [x.upper() for x in moveTypes]
-    
-    #dictionary, key = type, value = list of moves
-    moveDict = pd.getAllMoves(moveTypes)
-    
-    #list of all moves from moveDict
-    move_lists = list(moveDict.values())
-    #combines all list such as [a1,b1,c1...] from list a,b,c
-    alist = cc.interMixLists(move_lists)
-
-    #formats for titles
-    helpStr = "{:<30}"*len(moveTypes)
-
-    #list for header
-    title_list = []
-
-    for j in range(len(moveTypes)):
-        title_list.append(pd.pkmnMoveType_dict[alist[j]])
-        
-    movesCount = len(cc.cascadeLists(move_lists))
-
-    print(helpStr.format(*title_list))
-    while i < movesCount:
-        for m in range(len(move_lists)):
-            if m == len(move_lists)-1:
-                prStr += alist[i]+"\n"
-            else:
-                prStr += "{:<30}".format(alist[i])
-            i += 1
-    print(prStr)
-    
+   
 
 
 
@@ -220,7 +179,7 @@ moveList = ["Growl","Scratch","Smokescreen","Ember"]
 for move in moveList:
     Char.setMove(move)
 
-##printAllMoves(["Fire","electric","Rock","Dragon"])
+pd.printAllMoves(["Fire","electric","Rock","Dragon"])
 
 ##for move in pd.pkmnMoveType_dict:
 ##    print(pd.pkmnMoveType_dict[move])
