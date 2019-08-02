@@ -179,7 +179,7 @@ moveList = ["Growl","Scratch","Smokescreen","Ember"]
 for move in moveList:
     Char.setMove(move)
 
-pd.printAllMoves(["Fire","electric","Rock","Dragon"])
+#pd.printAllMoves(["Fire","electric","Rock","Dragon"])
 
 ##for move in pd.pkmnMoveType_dict:
 ##    print(pd.pkmnMoveType_dict[move])
