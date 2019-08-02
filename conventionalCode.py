@@ -5,6 +5,20 @@
 def space(num):
     print("\n"*num)
 
+
+def getCase(s):
+    case = ""
+    s = str(s)
+    if s == s.title():
+        case = "title"
+    elif s == s.lower():
+        case = "lower"
+    elif s == s.upper():
+        case = "upper"
+    else:
+        case = "Unknown case"
+    return case
+
 #------------------------------------------error message
 class CustomError(Exception):
     pass
