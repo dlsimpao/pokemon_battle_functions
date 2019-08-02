@@ -1,64 +1,37 @@
-#Pokemon party evaluator
-#evaluates the party based 
-
-import random
-import PMonsterClass as pmc
+#pkmnTeamEvaluator
+import pkmnTeamGenerator as ptg
+import pkmnBattleMatchups as pbm
+import pkmnData as pd
 import conventionalCode as cc
+import TypeMatchups as tm
+
 def main():
-#file
-    pokeFile = "PGenAll170719.csv"
+    pt_dict = pd.pkmnTypes_dict
+    penguin = ptg.pkmnTeam(["Blitzle", "Sudowoodo", "Wormadam (T)", "Mareanie", "Shiinotic","Porygon2"])
+##    penguin.randomizeParty(6)
+    print("Penguin\n")
+    penguin.printParty()
 
-    #fHandle
-    fHandle = open(pokeFile)
-
-    #1. generate a pokeparty, identify the individual types
-
-    #transfers csv file info to dictionary
-    pokeNameTypes_dict = {}
-    pokePartyData_dict = {}
-
-    fHandle.readline()
-    for line in fHandle:
-        line = cc.strNspl(line)
-        pokeNameTypes_dict[line[0]] = [line[1],line[2]] #<----------------------------
-
-    pokeParty = genPokeTeam(1, pokeFile)
-
-    for mon in pokeParty:
-        pokePartyData_dict[mon] = pokeNameTypes_dict[mon]
-#checkpoint
-    for mon in pokeParty:
-        print(mon + " " +str(pokePartyData_dict[mon]))
-#--------------
-    #2. set moves
-    for mon in pokeParty:
+    #figure out how to generate random pokemon of the Pokemon's type and set it as their moveset
+    for mon,obj in penguin.getParty().items():
+        types = [x.upper() for x in pt_dict[mon]]
+        move_list = ptg.genPokeMoves(4,types, cat = ["Physical","Special"]) 
+        print(types)
+        for move in move_list:
+            obj.setMove(mon)
         
-        nickName1 = pmc.Pokemon()
-        nickName2 = pmc.Pokemon()
-        nickName3 = pmc.Pokemon()
-        nickName4 = pmc.Pokemon()
-        nickName5 = pmc.Pokemon()
-        nickName6 = pmc.Pokemon()
-        
+    cc.space(1)
+    myPkmn_dict = penguin.getParty()
+    for mon,obj in myPkmn_dict.items():
+        print(obj)
     
+    cc.space(1)
+    
+    ostrich = ptg.pkmnTeam(["Lotad", "Croagunk", "Pikipek", "Nidoran?", "Spinda", "Articuno"])
+##    ostrich.randomizeParty(6)
+    print("Ostrich\n")
+    ostrich.printParty()
 
-#from pkmnTeamGenerator b/c modules cannot mutually reference each other
-def genPokeTeam(num, pokeFile):
-    pokeTeam_list = []
-    pokeName_dict = {}
-
-    fHandle = open(pokeFile)
-    fHandle.readline()
-    i = 1
-    for line in fHandle:
-        line = cc.strNspl(line)
-
-        pokeName_dict[i] = line[0] #<---------------------------------------
-        i += 1
-
-    while len(pokeTeam_list) != num:
-        ranVal = random.randint(1,len(pokeName_dict))
-        pokeTeam_list.append(pokeName_dict[ranVal])
-    return pokeTeam_list
 
 main()
+    
