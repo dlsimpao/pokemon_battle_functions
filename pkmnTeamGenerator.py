@@ -22,9 +22,11 @@ class pkmnTeam():
     pkmn_fieldStatus = ["In Battle","FNT"]
 
     def __init__(self, pkmn_list = []):
+        #dictionary with key = pkmn name as string, value as pkmn object
         self.pkmn_dict = {}
+        self.partyCount = 0
         self.setParty(pkmn_list)
-        self.partyCount = len(pkmn_list)
+
 
 
 
@@ -37,7 +39,7 @@ class pkmnTeam():
                 self.pkmn_dict[pkmnToAdd] = obj
                 self.partyCount += 1
             else:
-                #self.printParty()
+                self.printParty()
                 pkmnToSwap = input("Your party is full. Please select a Pokemon to swap.\n")
                 pkmnToSwap = pkmnToSwap.title()
                 if (pkmnToSwap in self.pkmn_dict) or (pkmnToSwap == pkmnToAdd):
@@ -74,6 +76,9 @@ class pkmnTeam():
 
 
 #Modify to get types from pokemon
+    def getTypes(self,pkmnName):
+        return self.pkmn_dict[pkmnName].getTypes() #get types from the object pkmn()
+    
     def randomizeMovesFor(self,pkmnName):
         moves = genPokeMoves(4,["Dragon"])
         for mon in self.pkmn_dict:
@@ -83,7 +88,11 @@ class pkmnTeam():
                 break
 
     def getMoves(self,pkmnName):
-        return self.pkmn_dict[pkmnName].getMoves()
+        return self.pkmn_dict[pkmnName].getMoves()#get moves from the object pkmn()
+
+    def setMoves(self,pkmnName, moves = []):
+        for move in moves:
+            self.pkmn_dict[pkmnName].setMove(move)
 
     def printMoves(self,pkmnName):
         moves = self.getMoves(pkmnName)
@@ -94,11 +103,11 @@ class pkmnTeam():
         self.setParty(genPokeTeam(num))
 
     def setParty(self,party_list):
-        self.pkmn_list = []
+        #self.pkmn_list = []
         notRec = []
         if len(party_list) <= 6:
             for mon in party_list:
-                if isValidName(mon, "Pokemon"):
+                if self.isValidName(mon, "Pokemon"):
                     mon = mon.title()
                     self.addMember(mon)
                 else:
@@ -199,11 +208,11 @@ def main():
     ##print(moveList)
     ##alist = genPokeTeam(6)
     ##print(alist)
-    pkmn_list = ["Heatran","Gallade","Zigzagoon","Entei","Espeon","Rattata"]
-    Red = pkmnTeam()
+    #pkmn_list = ["Heatran","Gallade","Zigzagoon","Entei","Espeon","Rattata"]
+    #Red = pkmnTeam()
     #Red.randomizeParty(6)  
-    for pkmn in pkmn_list:
-        Red.addMember(pkmn)
+##    for pkmn in pkmn_list:
+##        Red.addMember(pkmn)
     Red.printParty()
     cc.space(3)
     ##Red.addMember("charizard")
