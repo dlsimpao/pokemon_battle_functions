@@ -26,6 +26,8 @@ class Pokemon:
     fHandle = pd.getFHandle("Pokemon")
     pkmnTypes_dict = pd.autoDict(fHandle,index = False)
 
+    #pkmnTypes_dict = pd.Types_dict
+
     #gets valid moves
     fHandle2 = pd.getFHandle("Moves")
     moveAttrLabels = ["Name","Type","Cat.","Power","Acc.","PP"]
@@ -182,20 +184,37 @@ def getAllMoves(moveTypes = []):
                 retDict[pd.pkmnMoveType_dict[move]] = newMoves
     return retDict
 
-#super ugly, but gets the printing right
+#modify to go beyond two types
 def printAllMoves(moveTypes = []):
-    moveTypes = [x.upper() for x in moveTypes]
-    helpStr = "{:<20}"*len(moveTypes)
-    prDict = getAllMoves(moveTypes)
+    i = 0
 
-    valList = prDict.values()
-    #print(len(valList[0]),len(valList[1]))
-    valList = cc.sameMaxLen(valList)
+    #string to print
+    prStr = ""
     
-    print(valList)
+    moveTypes = [x.upper() for x in moveTypes]
     
+    moveDict = getAllMoves(moveTypes)
+
+    move_lists = list(moveDict.values())
+    move_lists.sort(reverse = True)
+    alist = cc.interMixLists(move_lists)
+
+    #formats for titles
+    helpStr = "{:<20}"*len(moveTypes)
+
+    movesCount = len(cc.cascadeLists(move_lists))
+
+    #------------------------------have appropriate titles    
     print(helpStr.format(*moveTypes))
-    print(helpStr.format(*prDict.values()))
+    while i < movesCount:
+        for m in range(len(move_lists)):
+            if m == len(move_lists)-1:
+                prStr += alist[i]+"\n"
+            else:
+                prStr += "{:<20}".format(alist[i])
+            i += 1
+    print(prStr)
+
 
 
 
