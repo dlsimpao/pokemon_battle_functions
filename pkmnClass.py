@@ -168,21 +168,7 @@ class Pokemon:
         for stat in stats_dict:
             print("{:<10}{:<20}".format(stat,stats_dict[stat]))
 
-#maybe: actual movesets for Pokemon, but it requires large database
-#next step include pkmn name parameter
-def getAllMoves(moveTypes = []):
-    retDict = {}
 
-    for move in pd.pkmnMoveType_dict:
-        if pd.pkmnMoveType_dict[move] in moveTypes:
-            if pd.pkmnMoveType_dict[move] not in retDict:
-                retDict[pd.pkmnMoveType_dict[move]] = move
-            else:
-                oldMove = retDict.get(pd.pkmnMoveType_dict[move])
-                newMoves = [oldMove,move]
-                newMoves = cc.cascadeLists(newMoves)
-                retDict[pd.pkmnMoveType_dict[move]] = newMoves
-    return retDict
 
 #modify to go beyond two types
 def printAllMoves(moveTypes = []):
@@ -190,31 +176,39 @@ def printAllMoves(moveTypes = []):
 
     #string to print
     prStr = ""
-    
+
+    #list with all caps types
     moveTypes = [x.upper() for x in moveTypes]
     
-    moveDict = getAllMoves(moveTypes)
-
+    #dictionary, key = type, value = list of moves
+    moveDict = pd.getAllMoves(moveTypes)
+    
+    #list of all moves from moveDict
     move_lists = list(moveDict.values())
-    move_lists.sort(reverse = True)
+    #combines all list such as [a1,b1,c1...] from list a,b,c
     alist = cc.interMixLists(move_lists)
 
     #formats for titles
-    helpStr = "{:<20}"*len(moveTypes)
+    helpStr = "{:<30}"*len(moveTypes)
 
+    #list for header
+    title_list = []
+
+    for j in range(len(moveTypes)):
+        title_list.append(pd.pkmnMoveType_dict[alist[j]])
+        
     movesCount = len(cc.cascadeLists(move_lists))
 
-    #------------------------------have appropriate titles    
-    print(helpStr.format(*moveTypes))
+    print(helpStr.format(*title_list))
     while i < movesCount:
         for m in range(len(move_lists)):
             if m == len(move_lists)-1:
                 prStr += alist[i]+"\n"
             else:
-                prStr += "{:<20}".format(alist[i])
+                prStr += "{:<30}".format(alist[i])
             i += 1
     print(prStr)
-
+    
 
 
 
@@ -226,7 +220,7 @@ moveList = ["Growl","Scratch","Smokescreen","Ember"]
 for move in moveList:
     Char.setMove(move)
 
-printAllMoves(["Fire","Water"])
+printAllMoves(["Fire","electric","Rock","Dragon"])
 
 ##for move in pd.pkmnMoveType_dict:
 ##    print(pd.pkmnMoveType_dict[move])
