@@ -213,6 +213,31 @@ def countDistinct(poke_dict):
             count_dict[poke_dict[types]] += 1
     return count_dict
 
+#maybe: actual movesets for Pokemon, but it requires large database
+#next step include pkmn name parameter
+
+#function returns all moves of a certain type, given a list
+def getAllMoves(moveTypes = []):
+    retDict = {}
+
+    for move in pkmnMoveType_dict:
+        if pkmnMoveType_dict[move] in moveTypes:
+            if pkmnMoveType_dict[move] not in retDict:
+                retDict[pkmnMoveType_dict[move]] = move
+            else:
+                oldMove = retDict.get(pkmnMoveType_dict[move])
+                newMoves = [oldMove,move]
+                newMoves = cc.cascadeLists(newMoves)
+                retDict[pkmnMoveType_dict[move]] = newMoves
+    return retDict
+
+#function returns the counts of all the moves per type, given a dictionary type as key, list of moves as value
+def moveCounts(pkmnTMoves_dict):
+    retDict = []
+    for moveType,moves in pkmnTMoves_dct:
+        retDict[moveType] = len(moves)
+    return retDict
+
 #------------------------------------------------
 
 fHandle = getFHandle("Pokemon")
@@ -221,9 +246,11 @@ pkmnTypes_dict = autoDict(fHandle)
 fHandle2 = getFHandle("Moves")
 pkmnMoveType_dict = autoDict(fHandle2,["Name","Type"],index = False)
 
+
 type_list = []
 for key in typesMatchup_dict:
     type_list.append(key)
+
 
 
 
