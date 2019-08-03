@@ -14,7 +14,7 @@
 
 import conventionalCode as cc
 import pkmnData as pd
-import PMonsterClass as pmc
+import pkmnClass as pmc
 import random
 
 class pkmnTeam():
