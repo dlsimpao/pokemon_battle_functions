@@ -75,19 +75,27 @@ def isValidType(type1,typeList):
 ##            valid = True
 
 
-def getMoveTypeEffects(type_num, types_dict):
+def getMoveTypeEffects(type_name, types_dict):
     noEffectAgainst = []
     notVeryEffectiveAgainst = []
     effectiveAgainst = []
 
-    type_num = type_num.title()
-    
-    for key in types_dict[type_num]:
-        if types_dict[type_num][key] == 0:
+
+    case = cc.getCase(list(types_dict.values())[0])
+
+    if case == "title":
+        type_name = type_name.title()
+    elif case == "lower":
+        type_name = type_name.lower()
+    else:
+        type_name = type_name.upper()
+        
+    for key in types_dict[type_name]:
+        if types_dict[type_name][key] == 0:
             noEffectAgainst.append(key)
-        elif types_dict[type_num][key] == 0.5:
+        elif types_dict[type_name][key] == 0.5:
             notVeryEffectiveAgainst.append(key)
-        elif types_dict[type_num][key] == 2:
+        elif types_dict[type_name][key] == 2:
             effectiveAgainst.append(key)
     return noEffectAgainst,notVeryEffectiveAgainst,effectiveAgainst
 

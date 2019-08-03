@@ -6,6 +6,19 @@ def space(num):
     print("\n"*num)
 
 
+def getCase(s):
+    case = ""
+    s = str(s)
+    if s == s.title():
+        case = "title"
+    elif s == s.lower():
+        case = "lower"
+    elif s == s.upper():
+        case = "upper"
+    else:
+        case = "Unknown case"
+    return case
+
 #------------------------------------------error message
 class CustomError(Exception):
     pass
@@ -101,6 +114,21 @@ def hasDuplicate(alist):
 ##alist = [1,2,3,4,1]
 ##print(hasDuplicate(alist))
 
+#function takes in a list of strings and letter case parameter and returns 
+def sameCase(alist, case):
+    retList = []
+    case = case.lower()
+    if case == "title":
+        retList = [i.title() for i in alist]
+    elif case == "lower":
+        retList = [i.lower() for i in alist]
+    elif case == "upper":
+        retList = [i.upper() for i in alist]
+    else:
+        raise ValueError("Enter correct parameters")
+    return retList
+    
+
 
 #function takes a list of sublists of strings and sets the proper case for each string in the sublist
 #returns a list of sublists
@@ -140,6 +168,20 @@ def rec_cascadeLists(listOfLists):
 
 #print(rec_cascadeLists([1,2,3,[4,5,[6]]]))
 
+#mixes the elements of a lists of lists into one list
+def interMixLists(lists):
+    count = len(cascadeLists(lists))
+    retList = []
+    j = 0
+    while j != count:
+        for i in range(len(lists)):
+            if j < len(lists[i]):
+                retList.append(lists[i][j])
+            else:
+                retList.append("")
+        j += 1
+    return retList
+
 #---------------------------------------------tuples
     
 #function turns tuples of tuples into a single tuple
@@ -163,6 +205,8 @@ def rec_cascadeTuples(tupOfTups):
         return rec_cascadeTuples(cascadeTuples(tupOfTups))
 
 #print(rec_cascadeTuples((1,((2,3),4,(5,6,(7))))))
+
+#---------------------------------------------------dictionary
 
 
 #-------------------------------------------------printing data

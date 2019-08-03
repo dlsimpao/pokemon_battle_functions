@@ -26,6 +26,8 @@ class Pokemon:
     fHandle = pd.getFHandle("Pokemon")
     pkmnTypes_dict = pd.autoDict(fHandle,index = False)
 
+    #pkmnTypes_dict = pd.Types_dict
+
     #gets valid moves
     fHandle2 = pd.getFHandle("Moves")
     moveAttrLabels = ["Name","Type","Cat.","Power","Acc.","PP"]
@@ -165,37 +167,7 @@ class Pokemon:
         stats_dict = self.getStats()
         for stat in stats_dict:
             print("{:<10}{:<20}".format(stat,stats_dict[stat]))
-
-#maybe: actual movesets for Pokemon, but it requires large database
-#next step include pkmn name parameter
-def getAllMoves(moveTypes = []):
-    retDict = {}
-
-    for move in pd.pkmnMoveType_dict:
-        if pd.pkmnMoveType_dict[move] in moveTypes:
-            if pd.pkmnMoveType_dict[move] not in retDict:
-                retDict[pd.pkmnMoveType_dict[move]] = move
-            else:
-                oldMove = retDict.get(pd.pkmnMoveType_dict[move])
-                newMoves = [oldMove,move]
-                newMoves = cc.cascadeLists(newMoves)
-                retDict[pd.pkmnMoveType_dict[move]] = newMoves
-    return retDict
-
-#super ugly, but gets the printing right
-def printAllMoves(moveTypes = []):
-    moveTypes = [x.upper() for x in moveTypes]
-    helpStr = "{:<20}"*len(moveTypes)
-    prDict = getAllMoves(moveTypes)
-
-    valList = prDict.values()
-    #print(len(valList[0]),len(valList[1]))
-    valList = cc.sameMaxLen(valList)
-    
-    print(valList)
-    
-    print(helpStr.format(*moveTypes))
-    print(helpStr.format(*prDict.values()))
+   
 
 
 
@@ -207,7 +179,7 @@ moveList = ["Growl","Scratch","Smokescreen","Ember"]
 for move in moveList:
     Char.setMove(move)
 
-printAllMoves(["Fire","Water"])
+#pd.printAllMoves(["Fire","electric","Rock","Dragon"])
 
 ##for move in pd.pkmnMoveType_dict:
 ##    print(pd.pkmnMoveType_dict[move])

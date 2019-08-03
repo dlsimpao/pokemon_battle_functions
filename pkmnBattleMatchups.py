@@ -35,13 +35,13 @@ def main():
     myStrong = getStrongOpp(oppOptParty, myPokeParty)
 
 
-    printParty(myPokeParty,"Penguin's Team")
-    cc.space(2)
-    printParty(oppPokeParty,"Evil Ostrich's Team")
-    cc.space(2)
-    printFavorMatch(myOptParty, myStrong)
-    cc.space(2)
-    printAvoidMatch(oppOptParty, oppStrong)
+##    printParty(myPokeParty,"Penguin's Team")
+##    cc.space(2)
+##    printParty(oppPokeParty,"Evil Ostrich's Team")
+##    cc.space(2)
+##    printFavorMatch(myOptParty, myStrong)
+##    cc.space(2)
+##    printAvoidMatch(oppOptParty, oppStrong)
 
     
 
