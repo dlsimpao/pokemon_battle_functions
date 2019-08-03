@@ -3,7 +3,7 @@ import pkmnTeamGenerator as ptg
 import pkmnBattleMatchups as pbm
 import pkmnData as pd
 import conventionalCode as cc
-import TypeMatchups as tm
+import pkmnTypeMatchups as tm
 
 def main():
     pt_dict = pd.pkmnTypes_dict
