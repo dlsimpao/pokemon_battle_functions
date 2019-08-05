@@ -31,7 +31,6 @@ class pkmnTeam():
 
 
     def addMember(self, pkmnToAdd):
-        pkmnToAdd = pkmnToAdd.title()
         if self.isValidName(pkmnToAdd):
             if self.partyCount < 6:
                 #uses Pokemon class and adds to the class team
@@ -48,7 +47,7 @@ class pkmnTeam():
                     print(pkmnToSwap+" is not found.")
                     self.addMember(pkmnToAdd)
         else:
-            print("The Pokedex does not recognize this name:"+pkmnToAdd)
+            print("The Pokedex does not recognize this name: "+pkmnToAdd) #Jangmo-o
 
     def swapMember(self, pkmnIn, pkmnOut):
         if pkmnIn != pkmnOut:
@@ -62,15 +61,9 @@ class pkmnTeam():
             print(pkmnIn.title()+" will not be added.")
         
         
-    def isValidName(self, name, nameCategory = "Pokemon"):
-        nameCategory = nameCategory.title()
+    def isValidName(self, name):
         valid = False
-        try:
-            fHandle = pd.getFHandle(nameCategory)
-        except:
-            raise ValueError("File shortcut unrecognized")
-        pkmnNames = pd.autoDict(fHandle,index = False)
-        if name in pkmnNames:
+        if name in pd.pkmnTypes_dict:
             valid = True
         return valid
 
@@ -107,8 +100,8 @@ class pkmnTeam():
         notRec = []
         if len(party_list) <= 6:
             for mon in party_list:
-                if self.isValidName(mon, "Pokemon"):
-                    mon = mon.title()
+                mon = cc.pureTitle(mon)
+                if self.isValidName(mon):
                     self.addMember(mon)
                 else:
                     notRec.append(mon)
@@ -182,6 +175,8 @@ def genPokeMoves(num,typeList = [], cat = []):
                 f += 1
         pokeMoves = createRandList(num, filtMoves_dict, unique = True)
     else:
+        for i in pokeMoves_dict:
+            pokeMoves_dict[i] = pokeMoves_dict[i][0]
         pokeMoves = createRandList(num, pokeMoves_dict, unique = True)
 
     return pokeMoves
@@ -190,15 +185,13 @@ def genPokeMoves(num,typeList = [], cat = []):
 #creates a random unique list of size num from a dictionary with integers as its keys
 def createRandList(num, d, unique = True):
     l = []
-
     while len(l) != num:
-        ranVal = random.randint(1,len(d))
+        ranVal = random.randint(1,len(d)-1)
         if unique:
             if d[ranVal] not in l:
                 l.append(d[ranVal])
         else:
             l.append(d[ranVal])
-
     return l
 
 
