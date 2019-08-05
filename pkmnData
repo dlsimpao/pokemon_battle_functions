@@ -95,28 +95,6 @@ def printData(fHandle):
         line = cc.strNspl(line)
         print(line)
 
-##def writeHeader(pokeFilePar):
-##    headerStr = ""
-##    header = []
-##    #not all lines have filled column values and thus, may vary
-##    #maxcolnCount keeps track of the largest column entries of any line
-##    
-##    fHandle = getFHandle(pokeFilePar, action = "r")
-##    hdrCount = len(getHeader(fHandle))
-##    fHandle = getFHandle(pokeFilePar, action = "a+")
-##    
-##    while len(header) < hdrCount:
-##        hdrName = input("Please enter header name for column "+str(len(header)+1)+"/"+str(hdrCount)+":\n")
-##        header.append(hdrName)
-##
-##    for hdrName in header:
-##        headerStr += str(hdrName)+", "
-##    fHandle.write(headerStr)
-##    fHandle.close()
-##
-
-    
-
 #creates a dictionary based on a given list of column names
 def autoDict(fHandle, selectedColn_list = [], index = True):
     #fHandle = getFHandle(fHandle)
@@ -164,6 +142,14 @@ def autoDict(fHandle, selectedColn_list = [], index = True):
                     retDict[i] = comColn
             i += 1
     return retDict
+
+def getPkmnType(pkmn):
+    pkmn = pkmn.title()
+    return pkmnTypes_dict[pkmn]
+
+def getPkmnMoveType(move):
+    move = move.title()
+    return pkmnMoveTypes_dict[move].title()
 
 
 #summarizes single and dual types
