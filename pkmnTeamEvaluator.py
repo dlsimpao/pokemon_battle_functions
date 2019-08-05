@@ -1,5 +1,5 @@
 #pkmnTeamEvaluator
-import pkmnTeamGenerator as ptg
+import pkmnTeamClass as ptc
 import pkmnBattleMatchups as pbm
 import pkmnData as pd
 import conventionalCode as cc
@@ -9,44 +9,75 @@ import pkmnTypeMatchups as tm
 
 def main():
     pt_dict = pd.pkmnTypes_dict
-    penguin = ptg.pkmnTeam(["Blitzle", "Sudowoodo", "Wormadam (T)", "Mareanie", "Shiinotic","Porygon2"])
-##    penguin.randomizeParty(6)
-    print("Penguin\n")
-    #penguin.printParty()
+    penguin = ptc.pkmnTeam(["Type: Null", "Jangmo-o", "Kommo-o", "Mareanie", "Shiinotic","Porygon2"])
+    #penguin = ptc.pkmnTeam()
+    #penguin.randomizeParty(6)
+##    print("Penguin\n")
+    penguin.printParty()
 
-    #figure out how to generate random pokemon of the Pokemon's type and set it as their moveset
+    
+    #sets random moves for each pkmn in the party
     for mon,obj in penguin.getParty().items():
         types = [x.upper() for x in pt_dict[mon]]
-        move_list = ptg.genPokeMoves(4,types, cat = ["Physical","Special"]) 
+        move_list = ptc.genPokeMoves(4) 
         for move in move_list:
             obj.setMove(move)
         
-    cc.space(1)
+    #cc.space(1)
     
     myPkmn_dict = penguin.getParty()
-    for mon,obj in myPkmn_dict.items():
-        print(obj)
-        cc.space(1)
+##    for mon,obj in myPkmn_dict.items():
+##        print(obj)
+##        cc.space(1)
     
-    cc.space(1)
-    
-    ostrich = ptg.pkmnTeam(["Lotad", "Croagunk", "Pikipek", "Nidoran?", "Spinda", "Articuno"])
-##    ostrich.randomizeParty(6)
-    print("Ostrich\n")
-    #ostrich.printParty()
-
     #cc.space(1)
+    
+##    ostrich = ptc.pkmnTeam(["Lotad", "Croagunk", "Pikipek", "Nidoran?", "Spinda", "Articuno"])
+    ostrich = ptc.pkmnTeam()
+    ostrich.randomizeParty(6)
+##    print("Ostrich\n")
+##    ostrich.printParty()
 
-    for mon,obj in ostrich.getParty().items():
+    cc.space(1)
+
+    oppPkmn_dict = ostrich.getParty()
+    for mon,obj in oppPkmn_dict.items():
         types = [x.upper() for x in pt_dict[mon]]
-        move_list = ptg.genPokeMoves(4,types, cat = ["Physical","Special"]) 
+        move_list = ptc.genPokeMoves(4)
         for move in move_list:
+            #print(move)
             obj.setMove(move)
-
-    for mon,obj in myPkmn_dict.items():
+            
+    oppPkmn_dict = ostrich.getParty()
+    for mon,obj in oppPkmn_dict.items():
         print(obj)
         cc.space(1)
 
+    #pbm.summaryMatchup(myPkmn_dict.keys(),oppPkmn_dict.keys())
+
+    #dictionary; key = object, values = pkmn type and move types
+    oppTypes_dict = getPkmn_MoveTypes(ostrich)
+    for obj in oppTypes_dict:
+        print(obj.getName())
+
+
+
+    
+#receives pkmn object, returns dictionary with pkmn type and move types
+def getPkmn_MoveTypes(pkmnTeam_obj):
+    pkmn_dict = pkmnTeam_obj.getParty()
+    retDict = {}
+        
+    for name, obj in pkmn_dict.items():
+        moveList = obj.getMoves()
+        moveTypeList = []
+        for move in moveList:
+            moveTypeList.append(pd.getPkmnMoveType(move))
+            
+        typeList = [pd.getPkmnTypes(name), moveTypeList]
+        typeList = cc.removeCommon(cc.cascadeLists(typeList))
+        retDict[obj] = typeList
+    return retDict
 
 main()
     
