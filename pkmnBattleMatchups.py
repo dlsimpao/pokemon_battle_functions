@@ -3,7 +3,7 @@
 #pkmnData has pkmnType_dict and pkmnMoveType_dict dictionaries
 import pkmnData as pd
 import conventionalCode as cc #
-import pkmnTeamGenerator as ptg #creates random team
+import pkmnTeamClass as ptc #creates random team
 
 import pkmnClass as pmc #
 import pkmnTypeMatchups as tm #
@@ -17,10 +17,10 @@ def main():
 
     #max six Pokemon in a party
     num = 6
-    myPokeParty = ptg.genPokeTeam(num)
-    oppPokeParty = ptg.genPokeTeam(num)
+    myPokeParty = ptc.genPokeTeam(num)
+    oppPokeParty = ptc.genPokeTeam(num)
 
-    #moveList = ptg.genPokeMoves(4)
+    #moveList = ptc.genPokeMoves(4)
     #print(moveList)
     #myPokeParty = createTeam(["Hitmonlee","Primeape","Articuno","Elgyem","Rowlet","Gastrodon"])
     #oppPokeParty = createTeam(["Weavile","Sneasel","Krabby","Starly","Leafeon","Basculin"])
@@ -147,6 +147,8 @@ def summaryMatchup(myParty,oppParty):
     myStrong = getStrongOpp(oppOptParty, myParty)
 
     printAvoidMatch(oppOptParty,myStrong)
+
+
 
 
         
