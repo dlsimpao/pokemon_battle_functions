@@ -5,8 +5,8 @@ import pkmnData as pd
 import conventionalCode as cc #
 import pkmnTeamGenerator as ptg #creates random team
 
-import PMonsterClass as pmc #
-import TypeMatchups as tm #
+import pkmnClass as pmc #
+import pkmnTypeMatchups as tm #
 
 
 
@@ -20,6 +20,8 @@ def main():
     myPokeParty = ptg.genPokeTeam(num)
     oppPokeParty = ptg.genPokeTeam(num)
 
+    #moveList = ptg.genPokeMoves(4)
+    #print(moveList)
     #myPokeParty = createTeam(["Hitmonlee","Primeape","Articuno","Elgyem","Rowlet","Gastrodon"])
     #oppPokeParty = createTeam(["Weavile","Sneasel","Krabby","Starly","Leafeon","Basculin"])
 
@@ -121,18 +123,30 @@ def printStrongOpp(opt_dict, oppList):
         print(mon)
 
 #prints desired matchups
-def printFavorMatch(myOpt_dict, strongPoke):
-    for mon in myOpt_dict:
-        print("My "+mon+": Use against "+str(myOpt_dict[mon]))
+def printFavorMatch(myOpt_dict, strongPoke = ""):
+    for mon,opp in myOpt_dict.items():
+        print("My "+mon+": Use against "+str(opp))
     print("Opposing team has no type counter for "+str(strongPoke))
 
 
 #prints unwanted matchups
-def printAvoidMatch(oppOpt_dict, strongPoke):
-    for mon in oppOpt_dict:
-        print("Opposing "+mon+": Do not use " +str(oppOpt_dict[mon]))
+def printAvoidMatch(oppOpt_dict, strongPoke = ""):
+    for mon,opp in oppOpt_dict.items():
+        print("Opposing "+mon+": Do not use " +str(opp))
     print("My team has no type counter for "+str(strongPoke))
 
+def summaryMatchup(myParty,oppParty):
+    myOptParty = optimizeParty(myParty,oppParty)
+    oppStrong = getStrongOpp(myOptParty,oppParty)
+    
+    printFavorMatch(myOptParty, oppStrong)
+
+    cc.space(1)
+    
+    oppOptParty = optimizeParty(oppParty,myParty)
+    myStrong = getStrongOpp(oppOptParty, myParty)
+
+    printAvoidMatch(oppOptParty,myStrong)
 
 
         
