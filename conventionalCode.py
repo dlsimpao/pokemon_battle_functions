@@ -6,10 +6,19 @@ def space(num):
     print("\n"*num)
 
 
+
+
+def pureTitle(s):
+    s = str(s)
+    first = s[:1]
+    first = first.title()
+    first += s[1:]
+    return first
+
 def getCase(s):
     case = ""
     s = str(s)
-    if s == s.title():
+    if s == pureTitle(s):
         case = "title"
     elif s == s.lower():
         case = "lower"
@@ -18,7 +27,6 @@ def getCase(s):
     else:
         case = "Unknown case"
     return case
-
 #------------------------------------------error message
 class CustomError(Exception):
     pass
