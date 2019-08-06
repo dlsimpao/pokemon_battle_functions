@@ -1,6 +1,6 @@
-#Conventional user-defined functions
+#Misc user-defined functions
 
-#---------------------------------------Misc
+#---------------------------------------Other
 #adds a newline for printing
 def space(num):
     print("\n"*num)
