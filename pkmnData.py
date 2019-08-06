@@ -232,6 +232,19 @@ def printAllMoves(moveTypes = []):
             i += 1
     print(prStr)
 
+#receive type (only single and dual type), returns list of pkmn by the type
+def getPkmnBy(types):
+    retList = []
+    #removes "" from types list
+    types = [x.title() for x in types]
+    types = cc.retNonBlanks(types)
+    
+    for pkmn,typing in pkmnTypes_dict.items():
+        typing = cc.retNonBlanks(typing)
+        if types == typing:
+            retList.append(pkmn)
+    return retList
+
 #------------------------------------------------
 
 fHandle = getFHandle("Pokemon")
