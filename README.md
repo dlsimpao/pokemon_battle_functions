@@ -1,6 +1,13 @@
 # pkmnProjects
 Random projects for fun... duh  
 
+Tasks
+- [ ] include links for data sources
+- [ ] ability module
+- [ ] evolution chains 
+- [ ] locations? sprites?
+- [ ] items
+
 Data | Description
 ----|----
 PGen1.csv | data for gen 1
