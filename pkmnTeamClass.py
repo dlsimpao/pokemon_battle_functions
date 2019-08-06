@@ -31,7 +31,6 @@ class pkmnTeam():
 
 
     def addMember(self, pkmnToAdd):
-        pkmnToAdd = pkmnToAdd.title()
         if self.isValidName(pkmnToAdd):
             if self.partyCount < 6:
                 #uses Pokemon class and adds to the class team
@@ -48,7 +47,7 @@ class pkmnTeam():
                     print(pkmnToSwap+" is not found.")
                     self.addMember(pkmnToAdd)
         else:
-            print("The Pokedex does not recognize this name.")
+            print("The Pokedex does not recognize this name: "+pkmnToAdd) #Jangmo-o
 
     def swapMember(self, pkmnIn, pkmnOut):
         if pkmnIn != pkmnOut:
@@ -62,15 +61,9 @@ class pkmnTeam():
             print(pkmnIn.title()+" will not be added.")
         
         
-    def isValidName(self, name, nameCategory = "Pokemon"):
-        nameCategory = nameCategory.title()
+    def isValidName(self, name):
         valid = False
-        try:
-            fHandle = pd.getFHandle(nameCategory)
-        except:
-            raise(NameError)
-        pkmnNames = pd.autoDict(fHandle,index = False)
-        if name in pkmnNames:
+        if name in pd.pkmnTypes_dict:
             valid = True
         return valid
 
@@ -107,8 +100,8 @@ class pkmnTeam():
         notRec = []
         if len(party_list) <= 6:
             for mon in party_list:
-                if self.isValidName(mon, "Pokemon"):
-                    mon = mon.title()
+                mon = cc.pureTitle(mon)
+                if self.isValidName(mon):
                     self.addMember(mon)
                 else:
                     notRec.append(mon)
@@ -136,7 +129,7 @@ def genPokeTeam(num):
     pokeName_dict = pd.autoDict(fHandle,["Pokemon"])
 
     while len(pokeTeam_list) != num:
-        ranVal = random.randint(1,len(pokeName_dict))
+        ranVal = random.randint(1,len(pokeName_dict)-1)
         pokeTeam_list.append(pokeName_dict[ranVal])
     return pokeTeam_list
 
@@ -145,11 +138,15 @@ def genPokeTeam(num):
 def genPokeMoves(num,typeList = [], cat = []):
     pokeMoves = []
     filtMoves_dict = {} #for type-specific moves
+    cat = [x.title() for x in cat]
     
     fHandle = pd.getFHandle("Moves")
     pokeMoves_dict = pd.autoDict(fHandle,["Name","Type","Cat."],index = True)
-    f = 1#new index for filtered dictionary
+
+#Diagnostic
+##    print(typeList == [],cat ==[])
     
+    f = 1#new index for filtered dictionary
     #fills in the filtered dictionary based on restrictions given
     if typeList != [] and cat != []: #if type and category restrictions apply
         typeList = [x.title() for x in typeList]
@@ -169,7 +166,7 @@ def genPokeMoves(num,typeList = [], cat = []):
                 f += 1
         pokeMoves = createRandList(num, filtMoves_dict, unique = True)
 
-    elif typeList == [] and cat == []: #if category restrictions apply
+    elif typeList == [] and cat != []: #if category restrictions apply
         typeList = [x.title() for x in typeList]
         for i in pokeMoves_dict:
             #print(pokeMoves_dict[move][1].title())
@@ -178,6 +175,8 @@ def genPokeMoves(num,typeList = [], cat = []):
                 f += 1
         pokeMoves = createRandList(num, filtMoves_dict, unique = True)
     else:
+        for i in pokeMoves_dict:
+            pokeMoves_dict[i] = pokeMoves_dict[i][0]
         pokeMoves = createRandList(num, pokeMoves_dict, unique = True)
 
     return pokeMoves
@@ -186,16 +185,13 @@ def genPokeMoves(num,typeList = [], cat = []):
 #creates a random unique list of size num from a dictionary with integers as its keys
 def createRandList(num, d, unique = True):
     l = []
-    try:
-        while len(l) != num:
-            ranVal = random.randint(1,len(d))
-            if unique:
-                if d[ranVal] not in l:
-                    l.append(d[ranVal])
-            else:
+    while len(l) != num:
+        ranVal = random.randint(1,len(d)-1)
+        if unique:
+            if d[ranVal] not in l:
                 l.append(d[ranVal])
-    except:
-        raise(ValueError)
+        else:
+            l.append(d[ranVal])
     return l
 
 
