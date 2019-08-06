@@ -1,14 +1,16 @@
 # pkmnProjects
 Random projects for fun... duh  
 
-File | Description
+Data | Description
 ----|----
 PGen1.csv | data for gen 1
 PGenAll170719.xlxs | data for all gen up until 7
 PokeAttackdex.csv | data for all attacks
 PokeAttackdex.xlsx | data for all attacks
-AllPkmnGen1-7.csv | data fpr all gen
+AllPkmnGen1-7.csv | data for all gen
 
+Modules | Description
+----|----
 conventionalCode.py | code for miscellaneous use  
 pkmnBattleMatchups.py | creates a matchup report based on my team's and opposing team's types  
 pkmnClass.py | class for pkmn object
