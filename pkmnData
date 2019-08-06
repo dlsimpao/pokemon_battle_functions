@@ -127,14 +127,14 @@ def autoDict(fHandle, selectedColn_list = [], index = True):
             i += 1
     return retDict
 
-def getPkmnType(pkmn):
-    pkmn = pkmn.title()
+
+def getPkmnTypes(pkmn):
+    pkmn = cc.pureTitle(pkmn)
     return pkmnTypes_dict[pkmn]
 
 def getPkmnMoveType(move):
-    move = move.title()
+    move = cc.pureTitle(move)
     return pkmnMoveType_dict[move].title()
-
 
 #summarizes single and dual types
 #summarizes type relativity
@@ -260,4 +260,5 @@ type_list = []
 for key in typesMatchup_dict:
     type_list.append(key)
 
-    
+#-------------------------------------------------------------
+
