@@ -2,6 +2,7 @@
 Random projects for fun... duh  
 
 Tasks
+- [ ] update conventionCode to miscCode
 - [ ] include links for data sources
 - [ ] ability module
 - [ ] evolution chains 
