@@ -10,11 +10,11 @@ PokeAttackdex.xlsx
 AllPkmnGen1-7.csv
 
 Code
-conventionalCode.py  
-- code for miscellaneous use
-pkmnBattleMatchups.py  
-- creates a matchup report based on my team's and opposing team's types
-pkmnClass.py  
+conventionalCode.py
+- code for miscellaneous use  
+pkmnBattleMatchups.py
+- creates a matchup report based on my team's and opposing team's types  
+pkmnClass.py
 - class for pkmn object
 pkmnDamageCalc.py  
 - uses given damage formula to calculate total damage output
