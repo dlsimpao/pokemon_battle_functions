@@ -135,43 +135,31 @@ def getPkmnTypes(pkmn):
 def getPkmnMoveType(move):
     move = cc.pureTitle(move)
     return pkmnMoveType_dict[move].title()
-
-#summarizes single and dual types
-#summarizes type relativity
-def pokeTypeSummary():
-    #fHandle = getFHandle("Pokemon")
-    type_dict = autoDict(fHandle)
-    dualTypeCount = 0
-    for mon in type_dict:
-        if type_dict[mon][1] == "":
-            dualTypeCount += 1
     
-
-def getDistinctTypes(fHandle):
-    #fHandle = getFHandle("Moves")
-    if fHandle.title() == "Moves":
+def getDistinctTypes(fh):
+    fh = fh.title()
+    distType_list = []
+    if fh == "Moves":
         fHandle = getFHandle("Moves")
         types_dict = autoDict(fHandle, ["Type"])
-        distType_list = []
         
-        for key in types_dict:
-           if types_dict[key] not in distType_list:
-               distType_list.append(types_dict[key])
+        for move,type1 in types_dict.items():
+           if type1 not in distType_list:
+               distType_list.append(type1)
                
-    elif fHandle.title() == "Pokemon":
+    elif fh == "Pokemon":
         fHandle = getFHandle("Pokemon")
         types_dict = autoDict(fHandle, ["Type I", "Type II"])
-        distType_list = []
 
-        for key in types_dict:
-            if types_dict[key] not in distType_list:
-                distType_list.append(types_dict[key])
+        for pkmn,types in types_dict.items():
+            if types not in distType_list:
+                distType_list.append(types)
                 
     return distType_list
 
 
-#problem: unhashable type 'list' occurs when I try to count the distinct number of dual types
-def countDistinct(poke_dict):
+
+def getDistinct(poke_dict):
     count_dict = {}
     
     for types in poke_dict:
@@ -183,28 +171,25 @@ def countDistinct(poke_dict):
             count_dict[poke_dict[types]] += 1
     return count_dict
 
-#maybe: actual movesets for Pokemon, but it requires large database
-#next step include pkmn name parameter
-
 #function returns all moves of a certain type, given a list
 def getAllMoves(moveTypes = []):
     retDict = {}
 
-    for move in pkmnMoveType_dict:
-        if pkmnMoveType_dict[move] in moveTypes:
-            if pkmnMoveType_dict[move] not in retDict:
-                retDict[pkmnMoveType_dict[move]] = move
+    for move,type1 in pkmnMoveType_dict.items():
+        if type1 in moveTypes:
+            if type1 not in retDict:
+                retDict[type1] = move
             else:
-                oldMove = retDict.get(pkmnMoveType_dict[move])
+                oldMove = retDict.get(type1)
                 newMoves = [oldMove,move]
                 newMoves = cc.cascadeLists(newMoves)
-                retDict[pkmnMoveType_dict[move]] = newMoves
+                retDict[type1] = newMoves
     return retDict
 
 #function returns the counts of all the moves per type, given a dictionary type as key, list of moves as value
-def moveCounts(pkmnTMoves_dict):
+def getCounts(pkmnTMoves_dict):
     retDict = []
-    for moveType,moves in pkmnTMoves_dct:
+    for moveType,moves in pkmnTMoves_dct.items():
         retDict[moveType] = len(moves)
     return retDict
 
@@ -254,6 +239,8 @@ pkmnTypes_dict = autoDict(fHandle)
 
 fHandle2 = getFHandle("Moves")
 pkmnMoveType_dict = autoDict(fHandle2,["Name","Type"],index = False)
+
+
 
 
 type_list = []
