@@ -6,6 +6,8 @@
 #add damage variations (multi hits, low kick based on weight, seismic toss based on level)
 #include catch rate probability?
 
+#methods - none
+
 import pkmnData as pd
 import conventionalCode as cc
 
@@ -26,8 +28,6 @@ class Pokemon:
     fHandle = pd.getFHandle("Pokemon")
     pkmnTypes_dict = pd.autoDict(fHandle,index = False)
 
-    #pkmnTypes_dict = pd.Types_dict
-
     #gets valid moves
     fHandle2 = pd.getFHandle("Moves")
     moveAttrLabels = ["Name","Type","Cat.","Power","Acc.","PP"]
@@ -36,7 +36,7 @@ class Pokemon:
     def __init__(self,name):
         try:
             self.name = name
-            self.type1, self.type2 = self.pkmnTypes_dict[name][0],self.pkmnTypes_dict[name][1]
+            self.type1, self.type2 = [*self.pkmnTypes_dict[name]]
         except:
             print("Please enter a valid Pokemon name")
         else:
