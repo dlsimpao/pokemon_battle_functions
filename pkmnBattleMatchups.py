@@ -17,8 +17,11 @@ def main():
 
     #max six Pokemon in a party
     num = 6
-    myPokeParty = ptc.genPokeTeam(num)
-    oppPokeParty = ptc.genPokeTeam(num)
+    #myPokeParty = ptc.genPokeTeam(num)
+    #oppPokeParty = ptc.genPokeTeam(num)
+
+##    myPokeParty = (["Paras","Gastly","Slowbro","Clefairy"])
+##    oppPokeParty = (["Drowzee","Meowth","Persian"])
 
     #moveList = ptc.genPokeMoves(4)
     #print(moveList)
@@ -28,15 +31,15 @@ def main():
     #stores the optimal party setup, assuming no switches and advantage based solely on type
 
     #Mine
-    myOptParty = optimizeParty(myPokeParty,oppPokeParty)
-    oppStrong = getStrongOpp(myOptParty, oppPokeParty)
+##    myOptParty = optimizeParty(myPokeParty,oppPokeParty)
+##    oppStrong = getStrongOpp(myOptParty, oppPokeParty)
 
 
     #Opp
-    oppOptParty = optimizeParty(oppPokeParty, myPokeParty)
-    myStrong = getStrongOpp(oppOptParty, myPokeParty)
-
-
+##    oppOptParty = optimizeParty(oppPokeParty, myPokeParty)
+##    myStrong = getStrongOpp(oppOptParty, myPokeParty)
+##
+##
 ##    printParty(myPokeParty,"Penguin's Team")
 ##    cc.space(2)
 ##    printParty(oppPokeParty,"Evil Ostrich's Team")
@@ -44,6 +47,8 @@ def main():
 ##    printFavorMatch(myOptParty, myStrong)
 ##    cc.space(2)
 ##    printAvoidMatch(oppOptParty, oppStrong)
+
+    useBattleMatchups()
 
     
 
@@ -148,7 +153,48 @@ def summaryMatchup(myParty,oppParty):
 
     printAvoidMatch(oppOptParty,myStrong)
 
+def useBattleMatchups():
+    ans = ""
+    ans2 = ""
+    myRoster = []
+    oppRoster = []
+    print("Please enter your party member's names")
+    while ans != "done":
+        ans = input("")
+        if ans != "done":
+            myRoster.append(ans)
+        
+    print("Please enter your opponent's member's names")
+    while ans2 != "done":
+        ans2 = input("")
+        if ans2 != "done":
+            oppRoster.append(ans2)
+        
+        
+    
+    myRoster = createTeam(myRoster)
+    oppRoster = createTeam(oppRoster)
 
+    myOptParty = optimizeParty(myRoster,oppRoster)
+    oppStrong = getStrongOpp(myOptParty, oppRoster)
+
+
+    #Opp
+    oppOptParty = optimizeParty(oppRoster, myRoster)
+    myStrong = getStrongOpp(oppOptParty, myRoster)
+
+    cc.space(1)
+    printParty(myRoster,"Penguin's Team")
+    cc.space(2)
+    printParty(oppRoster,"Evil Ostrich's Team")
+
+    print("Battle Advice")
+    cc.space(1)
+    printFavorMatch(myOptParty, myStrong)
+    cc.space(2)
+    printAvoidMatch(oppOptParty, oppStrong)
+
+    
 
 
         
