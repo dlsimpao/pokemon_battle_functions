@@ -4,8 +4,10 @@
 import conventionalCode as cc
 import pkmnData as pd
 
-
 def main():
+    printPkmnReport("Metagross")
+
+def usePTM():
     type_list = pd.types_list 
     #Asks user for types and stores in choice list
     choice_list = askForTypes(type_list)
@@ -213,8 +215,11 @@ def printEffectReport(choice_list):
         printMoveTypeReport(type1,types_dict)
         printMatchupReport(choice_list)
 
-    
+
+def printPkmnReport(pkmn):
+    types = pd.pkmnTypes_dict[pkmn]
+    print("Report for:",pkmn.upper())
+    printEffectReport(types)
 
   
-#main()
-
+main()
