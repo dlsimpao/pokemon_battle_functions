@@ -1,6 +1,6 @@
-#Conventional user-defined functions
+#Misc user-defined functions
 
-#---------------------------------------Misc
+#---------------------------------------Other
 #adds a newline for printing
 def space(num):
     print("\n"*num)
@@ -231,9 +231,9 @@ def rec_cascadeTuples(tupOfTups):
 def printRel(count_dict):
     total = sum(count_dict.values())
     retDict = {}
-    print("{:<20}{:<40}{:<15}".format("Key","Relative frequency","Counts"))
+    print("{:<30}{:<40}{:<15}".format("Key","Relative frequency","Counts"))
     for i in count_dict:
-        print("{:<20}{:<40}{:<15}".format(str(i),str(count_dict[i]/total),str(count_dict[i])))
+        print("{:<25}{:<40}{:<15}".format(str(i),str(count_dict[i]/total),str(count_dict[i])))
 #test
 count_test = {"Hello":1,"Hi":2,"Sup":3}
 ##printRel(count_test)
@@ -244,7 +244,7 @@ def printHorBarChart(count_dict):
     barStr = ""
     for i in count_dict:
         barStr = bar*count_dict[i]
-        print("{:<20}{:<30}".format(str(i),barStr))
+        print("{:<25}{:<30}".format(str(i),barStr))
 #printHorBarChart(count_test)
 
 #lazy method, not efficient

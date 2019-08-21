@@ -4,8 +4,10 @@
 import conventionalCode as cc
 import pkmnData as pd
 
-
 def main():
+    printPkmnReport("Metagross")
+
+def usePTM():
     type_list = pd.types_list 
     #Asks user for types and stores in choice list
     choice_list = askForTypes(type_list)
@@ -63,16 +65,15 @@ def isValidType(type1,typeList):
             pass
     return valid
 
-#--------------------------------------------------------------create an isValidDualType
-
-## type_list = ["normal","fighting","flying","poison","ground","rock","bug","ghost","steel"\
-##                 "fire","water","grass","electric","psychic","ice","dragon","dark","fairy","none",None]
-
-##if type1 in type_list and typ2 in type_list:
-##            type1.lower()
-##            if type2 != None:
-##                type2.lower()
-##            valid = True
+def isValidDual(types_list):
+    valid = False
+    types_list = [x.title() for x in types_list]
+    gTypes = tuple(types_list)
+    for pkmn,types in pd.pkmnTypes_dict.items():
+        if gTypes == types:
+            valid = True
+            break
+    return valid
 
 
 def getMoveTypeEffects(type_name, types_dict):
@@ -147,7 +148,8 @@ def printMatchupReport(choice_list):
 
 #retuns lists of the chosen types' varying matchups
 def getEffectMatch(choice_list):
-    choice_list = [x.title() for x in choice_list]
+    choice_list = list(choice_list)
+    #choice_list = [x.title() for x in choice_list]
     
     types_dict = pd.typesMatchup_dict
     
@@ -213,9 +215,11 @@ def printEffectReport(choice_list):
         printMoveTypeReport(type1,types_dict)
         printMatchupReport(choice_list)
 
-    
 
-    
-#main()
-#printEffectReport(["Fire","Flying"])
-#printEffectReport(["Fire"])
+def printPkmnReport(pkmn):
+    types = pd.pkmnTypes_dict[pkmn]
+    print("Report for:",pkmn.upper())
+    printEffectReport(types)
+
+  
+main()
