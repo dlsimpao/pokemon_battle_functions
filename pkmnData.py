@@ -1,6 +1,6 @@
 #Pokedata
 #central module for all Pokemon data
-import conventionalCode as cc
+import MiscCode as mc
 import fileinput
 
 
@@ -70,13 +70,13 @@ def getFileName(pokeFilePar):
 
 def getHeader(fHandle):
     header = fHandle.readline()
-    header = cc.strNspl(header)
+    header = mc.strNspl(header)
     return header
 
 
 def printData(fHandle):
     for line in fHandle:
-        line = cc.strNspl(line)
+        line = mc.strNspl(line)
         print(line)
 
 #creates a dictionary based on a given list of column names
@@ -100,7 +100,7 @@ def autoDict(fHandle, selectedColn_list = [], index = True):
                       
     i = 0 #specific column index
     for line in fHandle:
-        line = cc.strNspl(line)
+        line = mc.strNspl(line)
         #if no columns are selected
         if selectedColn_list == []:
             retDict[line[0]] = tuple(line[1:])
@@ -112,7 +112,7 @@ def autoDict(fHandle, selectedColn_list = [], index = True):
                 else:
                     oldColn = retDict.get(line[0])
                     newColn = line[coln_dict[name]]
-                    comColn = cc.rec_cascadeTuples((oldColn,newColn))
+                    comColn = mc.rec_cascadeTuples((oldColn,newColn))
                     retDict[line[0]] = comColn
         else:
             moreColn = ()
@@ -122,18 +122,18 @@ def autoDict(fHandle, selectedColn_list = [], index = True):
                 else:
                     oldColn = retDict.get(i)
                     newColn = line[coln_dict[name]]
-                    comColn = cc.rec_cascadeTuples((oldColn,newColn))
+                    comColn = mc.rec_cascadeTuples((oldColn,newColn))
                     retDict[i] = comColn
             i += 1
     return retDict
 
 
 def getPkmnTypes(pkmn):
-    pkmn = cc.pureTitle(pkmn)
+    pkmn = mc.pureTitle(pkmn)
     return pkmnTypes_dict[pkmn]
 
 def getPkmnMoveType(move):
-    move = cc.pureTitle(move)
+    move = mc.pureTitle(move)
     return pkmnMoveType_dict[move].title()
     
 def getDistinctTypes(fh):
@@ -182,7 +182,7 @@ def getAllMoves(moveTypes = []):
             else:
                 oldMove = retDict.get(type1)
                 newMoves = [oldMove,move]
-                newMoves = cc.cascadeLists(newMoves)
+                newMoves = mc.cascadeLists(newMoves)
                 retDict[type1] = newMoves
     return retDict
 
@@ -209,7 +209,7 @@ def printAllMoves(moveTypes = []):
     #list of all moves from moveDict
     move_lists = list(moveDict.values())
     #combines all list such as [a1,b1,c1...] from list a,b,c
-    alist = cc.interMixLists(move_lists)
+    alist = mc.interMixLists(move_lists)
 
     #formats for titles
     helpStr = "{:<30}"*len(moveTypes)
@@ -220,7 +220,7 @@ def printAllMoves(moveTypes = []):
     for j in range(len(moveTypes)):
         title_list.append(pkmnMoveType_dict[alist[j]])
         
-    movesCount = len(cc.cascadeLists(move_lists))
+    movesCount = len(mc.cascadeLists(move_lists))
 
     print(helpStr.format(*title_list))
     while i < movesCount:
@@ -237,10 +237,10 @@ def getPkmnBy(types):
     retList = []
     #removes "" from types list
     types = [x.title() for x in types]
-    types = cc.retNonBlanks(types)
+    types = mc.retNonBlanks(types)
     
     for pkmn,typing in pkmnTypes_dict.items():
-        typing = cc.retNonBlanks(typing)
+        typing = mc.retNonBlanks(typing)
         if types == typing:
             retList.append(pkmn)
     return retList
