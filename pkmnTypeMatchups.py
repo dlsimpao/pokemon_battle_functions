@@ -10,7 +10,7 @@ def main():
         printPkmnReport(mon,move = False)
 
 def usePTM():
-    type_list = pd.types_list 
+    type_list = pd.type_list 
     #Asks user for types and stores in choice list
     choice_list = askForTypes(type_list)
 
