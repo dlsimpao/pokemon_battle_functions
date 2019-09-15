@@ -1,11 +1,13 @@
 #P-Type Counters - generates type matchups and move effectiveness
 # to work, uncomment main() below
 
-import conventionalCode as cc
 import pkmnData as pd
+import MiscCode as mc
 
 def main():
-    printPkmnReport("Metagross")
+    pkmn_list = ["Primeape","Porygon2","Slowbro","Mienshao","Scrafty","Golurk","Slowking","Cofagrigus","Snorlax","Machamp","Alakazam","Porygon-Z","Chandelure","Hydreigon","Gengar"]
+    for mon in pkmn_list:
+        printPkmnReport(mon,move = False)
 
 def usePTM():
     type_list = pd.types_list 
@@ -82,7 +84,7 @@ def getMoveTypeEffects(type_name, types_dict):
     effectiveAgainst = []
 
 
-    case = cc.getCase(list(types_dict.values())[0])
+    case = mc.getCase(list(types_dict.values())[0])
 
     if case == "title":
         type_name = type_name.title()
@@ -216,10 +218,19 @@ def printEffectReport(choice_list):
         printMatchupReport(choice_list)
 
 
-def printPkmnReport(pkmn):
+def printPkmnReport(pkmn, move = True, match = True):
     types = pd.pkmnTypes_dict[pkmn]
     print("Report for:",pkmn.upper())
-    printEffectReport(types)
+    if move and match:
+        printEffectReport(types)
+    elif move:
+        if len(types) == 2:
+            printMoveTypeReport(types[0],pd.typesMatchup_dict)
+            printMoveTypeReport(types[1],pd.typesMatchup_dict)
+        else:
+            printMoveTypeReport(types,pd.typesMatchup_dict)
+    else:
+        printMatchupReport(types)
 
   
 main()
