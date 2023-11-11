@@ -1,5 +1,4 @@
 # pkmnProjects
-Random projects for fun... duh  
 
 Tasks
 - [ ] update conventionCode to miscCode
