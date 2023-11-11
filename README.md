@@ -1,4 +1,4 @@
-# pkmnProjects
+# pokemon_battle_functions
 
 Tasks
 - [ ] update conventionCode to miscCode
